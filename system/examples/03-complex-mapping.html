@@ -1,0 +1,30 @@
+<section class="screen" id="screen-2" aria-labelledby="q2-label">
+  
+  <button class="back-arrow" type="button" data-goto="1" aria-label="Go back">
+     </button>
+  
+  <div class="step-counter" aria-hidden="true" data-content="q2Progress"></div>
+  
+  <label class="sr-only" id="q2-label">Your age and target retirement age</label>
+  
+  <div class="sentence-block">
+    <div class="sentence-line">
+      <span data-content="q2Part1"></span>
+      <input type="text" id="input-age" class="sentence-input" placeholder="42" inputmode="numeric" pattern="[0-9]*">
+      <span data-content="q2Part2"></span>
+    </div>
+    <div class="sentence-line">
+      <span data-content="q2Part3"></span>
+      <input type="text" id="input-retire-age" class="sentence-input" placeholder="65" inputmode="numeric" pattern="[0-9]*">
+      <span data-content="q2Part4"></span>
+    </div>
+  </div>
+  
+  <p class="helper-text" id="age-helper" data-content="q2Helper"></p>
+  <div class="error-msg" id="age-error" role="alert"></div>
+  
+  <div class="nav-buttons">
+    <button class="btn btn-primary btn-dormant" type="button" data-goto="3" id="age-next" disabled data-content="btnNext"></button>
+  </div>
+
+</section>

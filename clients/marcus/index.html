@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Readiness | Marcus Cole</title>
+
+    <style>
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS
+           ═══════════════════════════════════════════ */
+        :root {
+            /* Risk Colors */
+            --critical: #dc2626;
+            --critical-soft: #fef2f2;
+            --critical-light: #fca5a5;
+            --high: #ea580c;
+            --medium: #ca8a04;
+            --medium-soft: #fefce8;
+            --low: #65a30d;
+
+            /* Surface & Text (Tailwind Stone palette) */
+            --bg: #fafaf9;
+            --surface: #ffffff;
+            --surface-hover: #f5f5f4;
+            --border: #e7e5e4;
+            --border-strong: #d6d3d1;
+            --text: #1c1917;
+            --muted: #57534e;
+            --remediation-bg: #f0fdf4;
+            --focus-ring: 0 0 0 3px rgba(70, 100, 180, 0.35);
+
+            /* Spacing */
+            --space-xs: 8px;
+            --space-sm: 12px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+
+            /* Typography — system font stack */
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.25rem;
+            --text-xl: 1.75rem;
+            --text-2xl: 2rem;
+            --text-3xl: clamp(2rem, 5vw, 2.75rem);
+
+            /* Animation */
+            --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ═══════════════════════════════════════════
+           BASE RESET & LAYOUT
+           ═══════════════════════════════════════════ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+
+        main {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 520px;
+            min-height: 560px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-2xl) var(--space-xl);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            /* no transition on max-width — causes layout thrash */
+        }
+
+        /* Wider card for results screen — content drives the height */
+        body:has(#screen-8.active) {
+            align-items: flex-start;
+            padding-top: var(--space-2xl);
+            padding-bottom: var(--space-2xl);
+        }
+
+        body:has(#screen-8.active) main {
+            max-width: 860px;
+            min-height: 0;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: var(--font);
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        /* ═══════════════════════════════════════════
+           BRAND LOGO (Marcus Cole monogram)
+           ═══════════════════════════════════════════ */
+        .brand-logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-lg);
+            background: linear-gradient(145deg, #166534 0%, #14532d 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            box-shadow: 0 1px 2px rgba(20, 83, 45, 0.18), 0 4px 12px rgba(20, 83, 45, 0.18);
+        }
+
+        /* Card divider */
+        .card-divider {
+            height: 1px;
+            background: var(--border);
+            margin: var(--space-md) 0;
+            border: none;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ═══════════════════════════════════════════
+           PROGRESS BAR
+           ═══════════════════════════════════════════ */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--text);
+            border-radius: 16px 0 0 0;
+            transition: width 400ms var(--ease-out);
+            width: 0;
+        }
+
+        /* Hide on opener and results */
+        body:has(#screen-0.active) .progress-bar,
+        body:has(#screen-7.active) .progress-bar,
+        body:has(#screen-8.active) .progress-bar { opacity: 0; }
+
+        /* ═══════════════════════════════════════════
+           SCREEN TRANSITIONS
+           ═══════════════════════════════════════════ */
+        .screen {
+            display: none;
+            opacity: 0;
+            animation: fadeIn 400ms var(--ease-out) forwards;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Results screen: keep block flow */
+        #screen-8.active {
+            display: block;
+            flex: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: var(--space-sm) var(--space-xl);
+            font-family: var(--font);
+            font-size: var(--text-base);
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 200ms var(--ease-out);
+        }
+
+        .btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.35; pointer-events: none; }
+
+        .btn-primary {
+            background: var(--text);
+            color: var(--bg);
+            width: 100%;
+            min-height: 52px;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #292524;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Results screen overrides — buttons can be auto width */
+        #screen-8 .btn { width: auto; }
+
+        /* ═══════════════════════════════════════════
+           BACK ARROW
+           ═══════════════════════════════════════════ */
+        .back-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            background: none;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 1.1rem;
+            border-radius: 8px;
+            margin-bottom: var(--space-lg);
+            transition: all 180ms var(--ease-out);
+            align-self: flex-start;
+        }
+
+        .back-arrow:hover {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .back-arrow:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 0: OPENER (centered card)
+           ═══════════════════════════════════════════ */
+        .opener {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            text-align: center;
+        }
+
+        .opener .card-divider {
+            margin-top: auto;
+        }
+
+        .opener h1 {
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-sm);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+
+        .opener-body {
+            color: var(--muted);
+            font-size: var(--text-base);
+            margin: 0 auto var(--space-md);
+            max-width: 380px;
+        }
+
+        .opener-meta {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-md);
+            font-size: var(--text-sm);
+            color: var(--muted);
+        }
+
+        .opener-meta span::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border-strong);
+            margin-right: var(--space-xs);
+            vertical-align: middle;
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 1: GUT CHECK
+           ═══════════════════════════════════════════ */
+        .eyebrow {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+            text-align: center;
+        }
+
+        .question-label {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        .helper-text {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-top: var(--space-md);
+            text-align: center;
+        }
+
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .mood-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            min-height: 104px;
+            padding: var(--space-md);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 180ms var(--ease-out);
+            font-family: var(--font);
+        }
+
+        .mood-card:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-strong);
+        }
+
+        .mood-card[aria-checked="true"] {
+            border-color: var(--text);
+            background: var(--surface);
+            box-shadow: 0 0 0 1px var(--text);
+        }
+
+        .mood-card:active { transform: scale(0.98); }
+
+        .mood-card:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .mood-emoji { font-size: 2rem; }
+        .mood-label { font-weight: 600; font-size: var(--text-sm); }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 2: SENTENCE COMPLETION
+           ═══════════════════════════════════════════ */
+        .step-counter {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .step-counter .current-num {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .sentence-block {
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .sentence-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-xs);
+            font-family: var(--font);
+            font-size: var(--text-xl);
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: var(--space-sm);
+        }
+
+        .sentence-input {
+            width: 76px;
+            font-family: var(--font);
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--text);
+            background: none;
+            border: none;
+            border-bottom: 2px solid var(--border-strong);
+            padding: 0 2px 2px;
+            text-align: center;
+            transition: border-color 200ms var(--ease-out);
+        }
+
+        .sentence-input:hover {
+            border-bottom-color: var(--muted);
+        }
+
+        .sentence-input:focus {
+            outline: none;
+            border-bottom-color: var(--text);
+        }
+
+        .sentence-input:focus-visible {
+            box-shadow: var(--focus-ring);
+            border-radius: 2px;
+        }
+
+        .sentence-input::placeholder {
+            color: var(--border-strong);
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 3: INTERSTITIAL
+           ═══════════════════════════════════════════ */
+        .interstitial {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            text-align: center;
+        }
+
+        .interstitial .card-divider {
+            margin-top: auto;
+        }
+
+        .interstitial h2 {
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-sm);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            animation: fadeInSlow 600ms var(--ease-out-expo) 100ms forwards;
+        }
+
+        .interstitial p {
+            color: var(--muted);
+            font-size: var(--text-base);
+            margin: 0 auto;
+            max-width: 420px;
+            opacity: 0;
+            animation: fadeInSlow 600ms var(--ease-out-expo) 350ms forwards;
+        }
+
+        .interstitial .btn {
+            opacity: 0;
+            animation: fadeInSlow 400ms var(--ease-out) 600ms forwards;
+        }
+
+        @keyframes fadeInSlow {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREENS 4-6: CURRENCY INPUTS
+           ═══════════════════════════════════════════ */
+        .currency-wrap {
+            position: relative;
+            margin-top: var(--space-md);
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: var(--space-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: var(--text-lg);
+            font-weight: 400;
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .currency-input {
+            width: 100%;
+            font-family: var(--font);
+            font-size: var(--text-lg);
+            font-weight: 400;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: var(--space-md) var(--space-lg) var(--space-md) 44px;
+            min-height: 56px;
+            text-align: center;
+            transition: all 200ms var(--ease-out);
+        }
+
+        .currency-input:hover {
+            border-color: var(--border-strong);
+        }
+
+        .currency-input:focus {
+            outline: none;
+            border-color: var(--muted);
+            box-shadow: var(--focus-ring);
+            background: var(--surface);
+        }
+
+        .currency-input::placeholder {
+            color: var(--border-strong);
+        }
+
+        .nav-buttons {
+            margin-top: auto;
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border);
+        }
+
+        .error-msg {
+            font-size: var(--text-sm);
+            color: var(--critical);
+            margin-top: var(--space-xs);
+            min-height: 1.2em;
+            text-align: center;
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 7: LOADING
+           ═══════════════════════════════════════════ */
+        .loading-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .loading-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--muted);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes pulse {
+            0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+            40% { opacity: 1; transform: scale(1); }
+        }
+
+        .loading-label {
+            font-family: var(--font);
+            font-size: var(--text-lg);
+            color: var(--muted);
+            opacity: 0;
+            animation: fadeInSlow 500ms var(--ease-out) 400ms forwards;
+        }
+
+        /* ═══════════════════════════════════════════
+           SCREEN 8: RESULTS
+           ═══════════════════════════════════════════ */
+
+        /* Print header (hidden on screen) */
+        .print-header { display: none; }
+
+        /* Progress Ring */
+        .results-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .results-hero .ring-section {
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .results-hero .verdict-section {
+            margin-bottom: 0;
+            text-align: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .results-hero .verdict-title {
+            font-size: var(--text-2xl);
+        }
+
+        .results-hero .verdict-body {
+            font-size: var(--text-sm);
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .ring-section {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .ring-wrap {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+        }
+
+        .ring-wrap svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: var(--surface);
+            stroke-width: 10;
+        }
+
+        .ring-fill {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.4s var(--ease-out-expo), stroke 600ms var(--ease-out) 0.8s;
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-pct {
+            font-family: var(--font);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .ring-label {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Verdict */
+        .verdict-section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .verdict-title {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-md);
+            line-height: 1.15;
+        }
+
+        .verdict-body {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* Two-column layout: Starting Point + Strategy */
+        .results-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: start;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .results-columns .explainer-section,
+        .results-columns .strategy-section {
+            margin-bottom: 0;
+        }
+
+        /* Explainer / Math Breakdown */
+        .explainer-section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .explainer-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .calc-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calc-table tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .calc-table td {
+            padding: var(--space-sm) 0;
+            vertical-align: top;
+        }
+
+        .calc-table td:first-child {
+            color: var(--muted);
+            font-size: var(--text-sm);
+            padding-right: var(--space-md);
+        }
+
+        .calc-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Strategy Section */
+        .strategy-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .strategy-section-title {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .strategy-card {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--border);
+        }
+
+        .strategy-card-title {
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: var(--text-base);
+            margin-bottom: var(--space-md);
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .slider-value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .strategy-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .strategy-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--text);
+            border: 3px solid var(--bg);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+            /* 44px touch target via transparent border padding */
+            background-clip: padding-box;
+        }
+
+        .strategy-slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--text);
+            border: 3px solid var(--bg);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        /* Ensure 44px touch area on the track itself */
+        .strategy-slider {
+            padding: 10px 0;
+            margin: -10px 0;
+        }
+
+        .strategy-slider:focus-visible {
+            box-shadow: var(--focus-ring);
+            border-radius: 3px;
+        }
+
+        .slider-helper {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-top: var(--space-sm);
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 6px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+            border: 1px solid var(--border);
+        }
+
+        .summary-card-title {
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: var(--text-base);
+            margin-bottom: var(--space-md);
+            color: var(--muted);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-xs) 0;
+            font-size: var(--text-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            padding-top: var(--space-sm);
+            font-size: var(--text-base);
+            font-weight: 600;
+        }
+
+        .summary-row-label { color: var(--muted); }
+
+        .summary-result-pct {
+            font-family: var(--font);
+            font-weight: 700;
+        }
+
+        /* Fine Print */
+        .fine-print-section {
+            margin-top: var(--space-md);
+            margin-bottom: 0;
+        }
+
+        .fine-print-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: var(--text-sm);
+            color: var(--muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            padding: var(--space-sm) 0;
+            min-height: 44px;
+        }
+
+        .fine-print-toggle:hover { color: var(--text); }
+
+        .fine-print-toggle::before {
+            content: '▸';
+            display: inline-block;
+            transition: transform 200ms var(--ease-out);
+        }
+
+        .fine-print-toggle[aria-expanded="true"]::before {
+            transform: rotate(90deg);
+        }
+
+        .fine-print-body {
+            display: none;
+            padding: var(--space-md) 0;
+        }
+
+        .fine-print-body.open { display: block; }
+
+        .fine-print-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-xs) 0;
+            font-size: var(--text-sm);
+            color: var(--muted);
+        }
+
+        .fine-print-row span:last-child { font-weight: 600; color: var(--text); }
+
+        /* Actions */
+        .actions-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .actions-title {
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-xs);
+        }
+
+        .actions-intro {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .action-card {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: var(--space-lg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 180ms var(--ease-out);
+            text-align: left;
+            font-family: var(--font);
+        }
+
+        .action-card:hover {
+            border-color: var(--border-strong);
+            background: var(--surface-hover);
+        }
+
+        .action-card:active {
+            transform: scale(0.98);
+        }
+
+        .action-card:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .action-card-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: var(--space-sm);
+            color: var(--muted);
+        }
+
+        .action-card:hover .action-card-icon {
+            color: var(--text);
+        }
+
+        .action-card-title {
+            font-family: var(--font);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .action-card-desc {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* Send Form */
+        .send-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(28, 25, 23, 0.5);
+            z-index: 100;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .send-overlay.open {
+            display: flex;
+        }
+
+        .send-form-card {
+            background: var(--bg);
+            border-radius: 6px 6px 0 0;
+            padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90dvh;
+            overflow-y: auto;
+            animation: slideUp 300ms var(--ease-out);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .send-form-title {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-xs);
+        }
+
+        .send-form-intro {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+        }
+
+        .form-input {
+            width: 100%;
+            font-family: var(--font);
+            font-size: var(--text-base);
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: var(--space-sm) var(--space-md);
+            min-height: 44px;
+            transition: border-color 200ms var(--ease-out);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--muted);
+            box-shadow: var(--focus-ring);
+        }
+
+        textarea.form-input {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .send-success {
+            display: none;
+            text-align: center;
+            padding: var(--space-2xl) 0;
+        }
+
+        .send-success.show { display: block; }
+
+        .send-success-check {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--remediation-bg);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-md);
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        .results-footer {
+            text-align: center;
+            padding: var(--space-xl) 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .results-footer p {
+            color: var(--muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .results-footer .cta-ready {
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: var(--text-base);
+            color: var(--text);
+        }
+
+        /* ═══════════════════════════════════════════
+           REDUCED MOTION
+           ═══════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Staggered results reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 500ms var(--ease-out-expo), transform 500ms var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Edit numbers link */
+        .edit-numbers {
+            display: inline-block;
+            font-size: var(--text-sm);
+            color: var(--muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            padding: var(--space-xs) 0;
+            margin-bottom: var(--space-lg);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .edit-numbers:hover { color: var(--text); }
+
+        /* Results screen — left-aligned, wider card layout */
+        #screen-8 .explainer-title,
+        #screen-8 .strategy-section-title,
+        #screen-8 .actions-title,
+        #screen-8 .actions-intro,
+        #screen-8 .summary-card-title { text-align: left; }
+
+        #screen-8 .ring-section { text-align: center; }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .results-hero {
+                flex-direction: column;
+            }
+
+            .results-hero .verdict-title {
+                font-size: var(--text-xl);
+            }
+
+            .results-hero .verdict-body {
+                max-width: none;
+            }
+
+            .results-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: var(--space-sm);
+            }
+
+            main {
+                padding: var(--space-xl) var(--space-lg);
+                border-radius: 12px;
+                min-height: 480px;
+            }
+
+            .brand-logo {
+                width: 56px;
+                height: 56px;
+                font-size: 22px;
+            }
+
+            .opener h1,
+            .interstitial h2 {
+                font-size: var(--text-xl);
+            }
+
+            .mood-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: var(--space-xs);
+            }
+
+            .mood-card {
+                min-height: 88px;
+                padding: var(--space-sm);
+            }
+
+            .sentence-line {
+                font-size: var(--text-lg);
+            }
+
+            .sentence-input {
+                font-size: var(--text-lg);
+                width: 64px;
+            }
+
+            .action-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .ring-wrap {
+                width: 170px;
+                height: 170px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           PRINT STYLES
+           ═══════════════════════════════════════════ */
+        @media print {
+            body {
+                background: white;
+                display: block;
+                padding: 0;
+            }
+
+            main {
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .print-header {
+                display: block;
+                text-align: center;
+                margin-bottom: var(--space-xl);
+                padding-bottom: var(--space-md);
+                border-bottom: 2px solid var(--text);
+            }
+
+            .print-header h1 { font-size: var(--text-xl); margin-bottom: 4px; }
+            .print-header p { font-size: var(--text-sm); color: var(--muted); }
+
+            .edit-numbers,
+            .strategy-section,
+            .actions-section,
+            .send-overlay,
+            .results-footer { display: none; }
+
+            .results-hero {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .results-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+        <!-- ═══ SCREEN 0: OPENER ═══ -->
+        <section class="screen active" id="screen-0">
+            <div class="opener">
+                <div class="brand-logo" aria-label="Marcus Cole">MC</div>
+                <h1 data-content="openerTitle"></h1>
+                <p class="opener-body" data-content="openerBody"></p>
+                <hr class="card-divider">
+                <button class="btn btn-primary" type="button" id="start-btn" data-content="btnStart"></button>
+                <div class="opener-meta">
+                    <span data-content="metaTime"></span>
+                    <span data-content="metaQuestions"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 1: GUT CHECK ═══ -->
+        <section class="screen" id="screen-1">
+            <p class="eyebrow" data-content="q1Eyebrow"></p>
+            <h2 class="question-label" data-content="q1Heading"></h2>
+            <div class="mood-grid" id="mood-grid-container" role="radiogroup" aria-label="How do you feel about retirement"></div>
+            <p class="helper-text" data-content="q1Helper"></p>
+        </section>
+
+        <!-- ═══ SCREEN 2: AGE ═══ -->
+        <section class="screen" id="screen-2" aria-labelledby="q2-label">
+            <button class="back-arrow" type="button" data-goto="1" aria-label="Go back">&larr;</button>
+            <div class="step-counter" aria-hidden="true" data-content="q2Progress"></div>
+            <label class="sr-only" id="q2-label">Your age and target retirement age</label>
+            <div class="sentence-block">
+                <div class="sentence-line">
+                    <span data-content="q2Part1"></span>
+                    <input type="text" id="input-age" class="sentence-input" placeholder="42" inputmode="numeric" pattern="[0-9]*" aria-label="Current age">
+                    <span data-content="q2Part2"></span>
+                    <span data-content="q2Part3"></span>
+                    <input type="text" id="input-retire-age" class="sentence-input" placeholder="65" inputmode="numeric" pattern="[0-9]*" aria-label="Target retirement age">
+                    <span data-content="q2Part4"></span>
+                </div>
+            </div>
+            <p class="helper-text" data-content="q2Helper"></p>
+            <div class="error-msg" id="age-error" role="alert"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" type="button" id="age-next" disabled data-content="btnNext"></button>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 3: INTERSTITIAL ═══ -->
+        <section class="screen" id="screen-3">
+            <div class="interstitial">
+                <h2 data-content="interstitialTitle"></h2>
+                <p data-content="interstitialBody"></p>
+                <hr class="card-divider">
+                <button class="btn btn-primary" type="button" data-goto="4" data-content="btnContinue"></button>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 4: INCOME ═══ -->
+        <section class="screen" id="screen-4">
+            <button class="back-arrow" type="button" data-goto="2" aria-label="Go back">&larr;</button>
+            <div class="step-counter" aria-hidden="true" data-content="q3Progress"></div>
+            <h2 class="question-label" data-content="q3Heading"></h2>
+            <div class="currency-wrap">
+                <span class="currency-symbol">$</span>
+                <input type="text" id="input-income" class="currency-input" placeholder="120,000" inputmode="numeric" aria-label="Annual household income">
+            </div>
+            <p class="helper-text" data-content="q3Helper"></p>
+            <div class="error-msg" id="income-error" role="alert"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" type="button" id="income-next" disabled data-content="btnNext"></button>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 5: SAVINGS ═══ -->
+        <section class="screen" id="screen-5">
+            <button class="back-arrow" type="button" data-goto="4" aria-label="Go back">&larr;</button>
+            <div class="step-counter" aria-hidden="true" data-content="q4Progress"></div>
+            <h2 class="question-label" data-content="q4Heading"></h2>
+            <div class="currency-wrap">
+                <span class="currency-symbol">$</span>
+                <input type="text" id="input-savings" class="currency-input" placeholder="85,000" inputmode="numeric" aria-label="Current retirement savings">
+            </div>
+            <p class="helper-text" data-content="q4Helper"></p>
+            <div class="error-msg" id="savings-error" role="alert"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" type="button" id="savings-next" disabled data-content="btnNext"></button>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 6: MONTHLY SAVINGS ═══ -->
+        <section class="screen" id="screen-6">
+            <button class="back-arrow" type="button" data-goto="5" aria-label="Go back">&larr;</button>
+            <div class="step-counter" aria-hidden="true" data-content="q5Progress"></div>
+            <h2 class="question-label" data-content="q5Heading"></h2>
+            <div class="currency-wrap">
+                <span class="currency-symbol">$</span>
+                <input type="text" id="input-monthly" class="currency-input" placeholder="800" inputmode="numeric" aria-label="Monthly retirement savings">
+            </div>
+            <p class="helper-text" data-content="q5Helper"></p>
+            <div class="error-msg" id="monthly-error" role="alert"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" type="button" id="monthly-next" disabled data-content="btnShowResults"></button>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 7: LOADING ═══ -->
+        <section class="screen" id="screen-7">
+            <div class="loading-screen" role="status" aria-live="polite">
+                <div class="loading-dots" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                </div>
+                <p class="loading-label" data-content="loadingText"></p>
+            </div>
+        </section>
+
+        <!-- ═══ SCREEN 8: RESULTS ═══ -->
+        <section class="screen" id="screen-8">
+
+            <button class="edit-numbers" type="button" id="edit-numbers">&larr; Edit your numbers</button>
+
+            <!-- Print-only header -->
+            <div class="print-header">
+                <h1 data-content="printHeaderTitle"></h1>
+                <p data-content="printHeaderSub"></p>
+            </div>
+
+            <!-- Hero: Ring + Verdict side by side -->
+            <div class="results-hero">
+                <div class="ring-section">
+                    <div class="ring-wrap">
+                        <svg viewBox="0 0 180 180" width="100%" height="100%">
+                            <circle class="ring-bg" cx="90" cy="90" r="75"></circle>
+                            <circle class="ring-fill" id="ring-fill" cx="90" cy="90" r="75"
+                                stroke-dasharray="471.24" stroke-dashoffset="471.24"></circle>
+                        </svg>
+                        <div class="ring-center">
+                            <div class="ring-pct" id="ring-pct">0%</div>
+                            <div class="ring-label" data-content="ringLabel"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verdict-section reveal" id="reveal-verdict">
+                    <h2 class="verdict-title" id="verdict-title"></h2>
+                    <p class="verdict-body" id="verdict-body"></p>
+                </div>
+            </div>
+
+            <!-- Two-column: Starting Point + Strategy -->
+            <div class="results-columns">
+                <!-- Math Breakdown -->
+                <div class="explainer-section reveal" id="reveal-explainer">
+                    <h2 class="explainer-title" data-content="explainerTitle"></h2>
+                    <table class="calc-table">
+                        <tr>
+                            <td data-content="calcLabelIncome"></td>
+                            <td id="calc-income"></td>
+                        </tr>
+                        <tr>
+                            <td data-content="calcLabelSavings"></td>
+                            <td id="calc-annual-savings"></td>
+                        </tr>
+                        <tr>
+                            <td data-content="calcLabelExpenses"></td>
+                            <td id="calc-expenses"></td>
+                        </tr>
+                        <tr>
+                            <td data-content="calcLabelTarget"></td>
+                            <td id="calc-target"></td>
+                        </tr>
+                        <tr>
+                            <td data-content="calcLabelProjected"></td>
+                            <td id="calc-projected"></td>
+                        </tr>
+                    </table>
+
+                    <!-- Fine Print (How the math works) -->
+                    <div class="fine-print-section">
+                        <button class="fine-print-toggle" id="fine-print-toggle" type="button" aria-expanded="false" data-content="finePrintToggle"></button>
+                        <div class="fine-print-body" id="fine-print-body">
+                            <div class="fine-print-row">
+                                <span data-content="finePrintProjected"></span>
+                                <span id="fp-projected"></span>
+                            </div>
+                            <div class="fine-print-row">
+                                <span data-content="finePrintTarget"></span>
+                                <span id="fp-target"></span>
+                            </div>
+                            <div class="fine-print-row">
+                                <span data-content="finePrintGapDef"></span>
+                                <span id="fp-gap"></span>
+                            </div>
+                            <div class="fine-print-row">
+                                <span data-content="finePrintReturnLabel"></span>
+                                <span data-content="finePrintReturnValue"></span>
+                            </div>
+                            <div class="fine-print-row">
+                                <span data-content="finePrintMethodLabel"></span>
+                                <span data-content="finePrintMethodValue"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategy Section -->
+                <div class="strategy-section reveal" id="strategy-section">
+                    <h2 class="strategy-section-title" data-content="strategySectionTitle"></h2>
+
+                    <!-- Save More -->
+                    <div class="strategy-card">
+                        <div class="strategy-card-title" data-content="strategyCardSaveTitle"></div>
+                        <div class="slider-label">
+                            <span data-content="sliderSaveLabel"></span>
+                            <span class="slider-value" id="slider-save-value"></span>
+                        </div>
+                        <input type="range" class="strategy-slider" id="slider-save" min="0" max="5000" step="50" aria-label="Monthly savings amount">
+                    </div>
+
+                    <!-- More Time -->
+                    <div class="strategy-card">
+                        <div class="strategy-card-title" data-content="strategyCardTimeTitle"></div>
+                        <div class="slider-label">
+                            <span data-content="sliderTimeLabel"></span>
+                            <span class="slider-value" id="slider-time-value"></span>
+                        </div>
+                        <input type="range" class="strategy-slider" id="slider-time" min="55" max="75" step="1" aria-label="Retirement age">
+                    </div>
+
+                    <!-- Part-time -->
+                    <div class="strategy-card">
+                        <div class="strategy-card-title" data-content="strategyCardPartTimeTitle"></div>
+                        <div class="slider-label">
+                            <span data-content="sliderPartTimeLabel"></span>
+                            <span class="slider-value" id="slider-pt-value"></span>
+                        </div>
+                        <input type="range" class="strategy-slider" id="slider-pt" min="0" max="60000" step="1000" aria-label="Part-time annual income in retirement">
+                        <p class="slider-helper" data-content="sliderPartTimeHelper"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="summary-card reveal" id="summary-card">
+                <div class="summary-card-title" data-content="summaryCardTitle"></div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelCurrent"></span>
+                    <span id="summary-current"></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelOriginalAge"></span>
+                    <span id="summary-orig-age"></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelAdjSav"></span>
+                    <span id="summary-adj-sav"></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelAdjAge"></span>
+                    <span id="summary-adj-age"></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelAdjPt"></span>
+                    <span id="summary-adj-pt"></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-row-label" data-content="summaryLabelResult"></span>
+                    <span id="summary-result" class="summary-result-pct" aria-live="polite"></span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-section reveal" id="reveal-actions">
+                <h2 class="actions-title" data-content="actionsSectionTitle"></h2>
+                <p class="actions-intro" data-content="actionsSectionIntro"></p>
+                <div class="action-cards">
+                    <button class="action-card" type="button" id="action-save">
+                        <svg class="action-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+                        <div class="action-card-title" data-content="actionCardSaveTitle"></div>
+                        <div class="action-card-desc" data-content="actionCardSaveDesc"></div>
+                    </button>
+                    <button class="action-card" type="button" id="action-send">
+                        <svg class="action-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+                        <div class="action-card-title" data-content="actionCardSendTitle"></div>
+                        <div class="action-card-desc" data-content="actionCardSendDesc"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="results-footer reveal" id="reveal-footer">
+                <p data-content="ctaBody"></p>
+                <p class="cta-ready" data-content="ctaReady"></p>
+            </div>
+        </section>
+
+        <!-- ═══ SEND FORM OVERLAY ═══ -->
+        <div class="send-overlay" id="send-overlay" role="dialog" aria-modal="true">
+            <div class="send-form-card">
+                <div id="send-form-content">
+                    <h2 class="send-form-title" data-content="sendFormTitle"></h2>
+                    <p class="send-form-intro" data-content="sendFormIntro"></p>
+                    <form id="send-form">
+                        <div class="form-group">
+                            <label class="form-label" for="send-name" data-content="sendFormNameLabel"></label>
+                            <input type="text" class="form-input" id="send-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="send-email" data-content="sendFormEmailLabel"></label>
+                            <input type="email" class="form-input" id="send-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="send-note" data-content="sendFormNoteLabel"></label>
+                            <textarea class="form-input" id="send-note"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="btn btn-secondary" type="button" id="send-cancel" data-content="sendFormCancel"></button>
+                            <button class="btn btn-primary" type="submit" data-content="sendFormSubmit"></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="send-success" id="send-success">
+                    <div class="send-success-check">&#10003;</div>
+                    <p class="font-heading" data-content="sendSuccessText" style="font-size: var(--text-lg);"></p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+    // ═══════════════════════════════════════════
+    // PART 1: CONTENT DICTIONARY
+    // ═══════════════════════════════════════════
+    const projectContent = {
+        // General Buttons
+        btnNext: "Next",
+        btnContinue: "Continue",
+        btnStart: "Let\u2019s do it",
+        btnShowResults: "Show me where I stand",
+
+        // Screen 0: Opener
+        openerTitle: "Are you on track<br>for retirement?",
+        openerBody: "Put in your numbers. I\u2019ll do the math.",
+        metaTime: "Under 2 minutes",
+        metaQuestions: "4 questions",
+
+        // Screen 1: Gut Check
+        q1Eyebrow: "Gut check",
+        q1Heading: "Before we look at any numbers, how are you feeling about retirement right now?",
+        q1Helper: "There\u2019s no wrong answer here. I ask because it\u2019s useful to know where your head is before the math shows up.",
+        moodOptions: [
+            { id: "behind", emoji: "\u{1F61F}", label: "Behind" },
+            { id: "unsure", emoji: "\u{1F914}", label: "Not sure" },
+            { id: "ontrack", emoji: "\u{1F60C}", label: "On track" }
+        ],
+
+        // Screen 2: Age (Sentence Completion)
+        q2Progress: "<span class='current-num'>1</span> of 4",
+        q2Part1: "I\u2019m",
+        q2Part2: "years old and",
+        q2Part3: "I\u2019d like to retire by",
+        q2Part4: ".",
+        q2Helper: "These two numbers set the timeline. Everything else is built on top of how many years you have between now and when you want to stop.",
+
+        // Screen 3: Interstitial
+        interstitialTitle: "The Big Picture",
+        interstitialBody: "If you don\u2019t know the exact amounts for your income, what you\u2019ve saved so far or what you\u2019re putting away each month, provide a rough estimate if you can.",
+
+        // Screen 4: Income
+        q3Progress: "<span class='current-num'>2</span> of 4",
+        q3Heading: "What is the yearly income for your household?",
+        q3Helper: "Before taxes. Round to the nearest ten thousand if you\u2019re not sure.",
+
+        // Screen 5: Savings
+        q4Progress: "<span class='current-num'>3</span> of 4",
+        q4Heading: "What have you saved for retirement so far?",
+        q4Helper: "Add it all up: 401(k), IRA, that Roth you opened and forgot about, any brokerage accounts earmarked for retirement. One number, everything together.",
+
+        // Screen 6: Monthly
+        q5Progress: "<span class='current-num'>4</span> of 4",
+        q5Heading: "How much are you putting away each month?",
+        q5Helper: "Include your own contributions and any employer match. If your company puts in 4% and you put in 6%, add both. A rough number works here.",
+
+        // Screen 7: Loading
+        loadingText: "Running your numbers\u2026",
+
+        // Screen 8: Results - Explainer & Headers
+        printHeaderTitle: "Your Retirement Readiness Summary",
+        printHeaderSub: "Prepared before your call with Marcus Cole",
+        ringLabel: "funded",
+        explainerTitle: "Your starting point",
+        calcLabelIncome: "Annual income",
+        calcLabelSavings: "Annual savings at your current pace",
+        calcLabelExpenses: "Estimated annual spending",
+        calcLabelTarget: "Retirement target (25x your spending)",
+        calcLabelProjected: "Projected savings by retirement",
+
+        // Screen 8: Results - Verdict (Ahead of Target)
+        verdictAheadTitle: "You\u2019re ahead of where you need to be.",
+        verdictAheadBodyOnTrack: "You walked in thinking you were in good shape, and your numbers point in that direction. If you keep saving at this rate, you\u2019ll end up with more than your retirement target by the time you stop working. So the question isn\u2019t whether you\u2019re going to make it. It\u2019s what you want to do with the extra room: retire earlier, spend more freely, or leave something behind.",
+        verdictAheadBodyUnsure: "You weren\u2019t sure where you stood. That\u2019s the most common answer I get, by the way, even from people who are doing well. The math puts you ahead of your retirement target. That means the years of saving and not touching it have actually added up to something real. \u201cAhead\u201d by itself doesn\u2019t tell you what to do next, though. That\u2019s where the conversation starts.",
+        verdictAheadBodyBehind: "You came in feeling behind, and I get why. Most of my clients feel that way the first time we sit down, even the ones whose math looks like yours. But based on what you entered, you\u2019re actually ahead of your retirement target. People carry the worry around for years, then they finally look at the actual number and it\u2019s better than they thought. That\u2019s worth understanding, and it\u2019s where we\u2019ll start.",
+
+        // Screen 8: Results - Verdict (On Track)
+        verdictOnTrackTitle: "You\u2019re on track.",
+        verdictOnTrackBodyOnTrack: "Your gut was right. Based on what you entered, you\u2019re close to your retirement target, which is a better position than most people your age are in. You don\u2019t need a dramatic change to get there. The real question is whether \u201cclose\u201d is close enough for the life you actually want to live, and whether small adjustments would give you more breathing room without changing how you live today.",
+        verdictOnTrackBodyUnsure: "You weren\u2019t sure, and now you have a number. If you keep saving at this rate, you\u2019ll land near your retirement target. That puts you ahead of most people I sit down with for the first time. The question isn\u2019t really whether you\u2019ll make it. It\u2019s whether the target itself is right for the kind of retirement you actually want.",
+        verdictOnTrackBodyBehind: "I know you came in feeling behind, but the math tells a different story. Running the numbers forward, you\u2019re close to your retirement target. That gap between how it feels and what the numbers say usually comes from not having looked at all the pieces together in one place before. Now you have.",
+
+        // Screen 8: Results - Verdict (Meaningful Shortfall)
+        verdictShortfallTitle: "You\u2019re not there yet.",
+        verdictShortfallBodyOnTrack: "I want to be straight with you, because that\u2019s how I\u2019d want someone to be with me. Based on what you entered, you\u2019re on pace for about {{projected}}. Your current target is {{target}}. That\u2019s a meaningful shortfall. Most calculators would show you that number and leave you sitting with it, and that\u2019s where people close the tab. I\u2019m not going to do that. Below are three things that would actually move your number.",
+        verdictShortfallBodyUnsure: "Now you know. If you keep saving at this rate, you\u2019ll end up with around {{projected}} in your retirement fund by the time you stop working. From the answers you gave, your target should be around {{target}}. That\u2019s a big difference between where you\u2019re headed and where you need to be, but you just took the first step in closing it by getting to know your actual numbers. Three ways to move them are below.",
+        verdictShortfallBodyBehind: "You had a feeling, and your numbers point in that direction. Running the numbers forward, you\u2019re on pace for about {{projected}}. Your current target is {{target}}. That\u2019s a meaningful shortfall. But this is the part most calculators get wrong: they show you the gap and leave you there. People close the tab and don\u2019t come back. I\u2019d rather show you what closing the gap actually looks like. Three ways to move it are below.",
+
+        // Screen 8: Results - Strategies
+        strategySectionTitle: "Here\u2019s what would change it.",
+        strategyCardSaveTitle: "Save more each month",
+        strategyCardTimeTitle: "Give it more time",
+        strategyCardPartTimeTitle: "Work part-time in retirement",
+        sliderSaveLabel: "Monthly savings",
+        sliderTimeLabel: "Retirement age",
+        sliderPartTimeLabel: "Part-time annual income",
+        sliderPartTimeHelper: "This is the lever most people don\u2019t think about. Even a modest income in retirement, part-time consulting, teaching a class, working a few days a week, means you need a lot less saved on day one.",
+
+        // Screen 8: Results - Summary Card
+        summaryCardTitle: "Your adjusted picture",
+        summaryLabelCurrent: "Current monthly savings",
+        summaryLabelOriginalAge: "Original retirement age",
+        summaryLabelAdjSav: "Adjusted savings",
+        summaryLabelAdjAge: "Adjusted retirement age",
+        summaryLabelAdjPt: "Part-time income",
+        summaryLabelResult: "Projected result",
+
+        // Screen 8: Results - Fine Print
+        finePrintToggle: "How the math works",
+        finePrintProjected: "If nothing changes, you\u2019ll have",
+        finePrintTarget: "What you need",
+        finePrintGapDef: "The difference",
+        finePrintReturnLabel: "Assumed annual return",
+        finePrintReturnValue: "7%",
+        finePrintMethodLabel: "Method",
+        finePrintMethodValue: "25x annual spending",
+
+        // Screen 8: Results - Actions & Send Form
+        actionsSectionTitle: "Bring this to the call.",
+        actionsSectionIntro: "You\u2019ve got a real number now instead of a feeling. Two ways to make sure we use it when we sit down.",
+        actionCardSaveTitle: "Save your plan",
+        actionCardSaveDesc: "Print this page or save it as a PDF. Bring your numbers to the meeting so we\u2019re both looking at the same thing.",
+        actionCardSendTitle: "Send it to Marcus",
+        actionCardSendDesc: "I\u2019ll have your numbers before you walk in. We skip the recap and get straight to planning.",
+        sendFormTitle: "Send your numbers ahead of the call",
+        sendFormIntro: "I get your numbers before we meet, you skip the recap, and we get straight to planning.",
+        sendFormNameLabel: "Your name",
+        sendFormEmailLabel: "Your email",
+        sendFormNoteLabel: "Anything you want to make sure we cover on the call? <span style='color:var(--muted)'>(optional)</span>",
+        sendFormCancel: "Cancel",
+        sendFormSubmit: "Send to Marcus",
+        sendSuccessText: "Done. I\u2019ll have your numbers before the call.",
+
+        // Screen 8: Results - Footer
+        ctaBody: "This is a starting answer, not a final one. The real planning happens when we sit down, and it goes a lot faster now that you already know where you stand.",
+        ctaReady: "You\u2019re ready for the call."
+    };
+
+    // ═══════════════════════════════════════════
+    // PART 2: TEMPLATE ENGINE
+    // ═══════════════════════════════════════════
+    function renderContent() {
+        // Simple key binding
+        document.querySelectorAll('[data-content]').forEach(el => {
+            const key = el.getAttribute('data-content');
+            if (projectContent[key] !== undefined) {
+                el.innerHTML = projectContent[key];
+            }
+        });
+
+        // Array: mood cards
+        const moodContainer = document.getElementById('mood-grid-container');
+        if (moodContainer && projectContent.moodOptions) {
+            moodContainer.innerHTML = '';
+            projectContent.moodOptions.forEach(opt => {
+                moodContainer.innerHTML += `
+                    <button class="mood-card" type="button" role="radio" aria-checked="false" data-mood="${opt.id}">
+                        <span class="mood-emoji">${opt.emoji}</span>
+                        <span class="mood-label">${opt.label}</span>
+                    </button>`;
+            });
+        }
+    }
+
+    // ═══════════════════════════════════════════
+    // PART 3: APP LOGIC
+    // ═══════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+        renderContent();
+
+        // ── State ──
+        const state = {
+            mood: null,
+            age: null,
+            retireAge: null,
+            income: null,
+            savings: null,
+            monthly: null
+        };
+
+        // ── Helpers ──
+        const $ = id => document.getElementById(id);
+        const screens = document.querySelectorAll('.screen');
+
+        // Progress bar: screens 1-6 map to 0%-100%
+        const progressSteps = { 1: 16, 2: 33, 3: 50, 4: 66, 5: 83, 6: 100 };
+
+        function goTo(n) {
+            screens.forEach(s => s.classList.remove('active'));
+            const target = $('screen-' + n);
+            target.classList.add('active');
+            target.style.animation = 'none';
+            target.offsetHeight; // trigger reflow
+            target.style.animation = '';
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Update progress bar
+            const pct = progressSteps[n] || 0;
+            const bar = $('progress-bar');
+            bar.style.width = pct + '%';
+            bar.setAttribute('aria-valuenow', pct);
+
+            // Auto-focus the first interactive element so Enter works immediately
+            // Skip results screen (screen 8) — it has staggered reveals
+            if (n !== 8) {
+                const focusable = target.querySelector('button:not(.back-arrow):not(:disabled), input:not(:disabled)');
+                if (focusable) setTimeout(() => focusable.focus(), 50);
+            }
+        }
+
+        function fmtCurrency(n) {
+            if (n >= 1e6) {
+                const m = n / 1e6;
+                return '$' + (m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+            }
+            return '$' + Math.round(n).toLocaleString('en-US');
+        }
+
+        function parseCurrency(str) {
+            return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        function formatInputCurrency(val) {
+            const num = parseInt(val.replace(/[^0-9]/g, ''), 10);
+            if (isNaN(num)) return '';
+            return num.toLocaleString('en-US');
+        }
+
+        // ── Currency input formatting ──
+        function setupCurrencyInput(inputEl, nextBtn, errorEl, allowZero) {
+            inputEl.addEventListener('input', () => {
+                const raw = inputEl.value;
+                const formatted = formatInputCurrency(raw);
+                const cursorPos = inputEl.selectionStart;
+                const prevLen = raw.length;
+                inputEl.value = formatted;
+                // Adjust cursor for added/removed commas
+                const diff = formatted.length - prevLen;
+                inputEl.setSelectionRange(cursorPos + diff, cursorPos + diff);
+
+                const num = parseCurrency(formatted);
+                if (allowZero) {
+                    nextBtn.disabled = formatted === '';
+                } else {
+                    nextBtn.disabled = num <= 0;
+                }
+                if (errorEl) errorEl.textContent = '';
+            });
+        }
+
+        // ── Enter key advances from any input to its Next button ──
+        function enterToAdvance(inputEl, btnEl) {
+            inputEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !btnEl.disabled) {
+                    e.preventDefault();
+                    btnEl.click();
+                }
+            });
+        }
+
+        // ── Screen 0: Start ──
+        $('start-btn').addEventListener('click', () => goTo(1));
+
+        // ── Screen 1: Mood ──
+        const moodCards = () => document.querySelectorAll('.mood-card');
+        moodCards().forEach(card => {
+            card.addEventListener('click', () => {
+                moodCards().forEach(c => c.setAttribute('aria-checked', 'false'));
+                card.setAttribute('aria-checked', 'true');
+                state.mood = card.dataset.mood;
+                setTimeout(() => goTo(2), 250);
+            });
+        });
+
+        // Arrow-key navigation for radiogroup
+        document.getElementById('mood-grid-container').addEventListener('keydown', (e) => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+            const cards = [...moodCards()];
+            const current = cards.findIndex(c => c === document.activeElement);
+            if (current === -1) return;
+            e.preventDefault();
+            const next = e.key === 'ArrowRight'
+                ? (current + 1) % cards.length
+                : (current - 1 + cards.length) % cards.length;
+            cards[next].focus();
+        });
+
+        // ── Screen 2: Age ──
+        const ageInput = $('input-age');
+        const retireInput = $('input-retire-age');
+        const ageNext = $('age-next');
+        const ageError = $('age-error');
+
+        function validateAge() {
+            const age = parseInt(ageInput.value, 10);
+            const retire = parseInt(retireInput.value, 10);
+            ageError.textContent = '';
+
+            if (!age || !retire) {
+                ageNext.disabled = true;
+                return;
+            }
+            if (age < 18 || age > 80) {
+                ageError.textContent = 'Enter an age between 18 and 80.';
+                ageNext.disabled = true;
+                return;
+            }
+            if (retire <= age) {
+                ageError.textContent = 'Retirement age needs to be after your current age.';
+                ageNext.disabled = true;
+                return;
+            }
+            if (retire > 85) {
+                ageError.textContent = 'Enter a retirement age of 85 or earlier.';
+                ageNext.disabled = true;
+                return;
+            }
+            ageNext.disabled = false;
+        }
+
+        ageInput.addEventListener('input', () => {
+            ageInput.value = ageInput.value.replace(/[^0-9]/g, '').slice(0, 2);
+            validateAge();
+        });
+        retireInput.addEventListener('input', () => {
+            retireInput.value = retireInput.value.replace(/[^0-9]/g, '').slice(0, 2);
+            validateAge();
+        });
+
+        enterToAdvance(ageInput, ageNext);
+        enterToAdvance(retireInput, ageNext);
+
+        ageNext.addEventListener('click', () => {
+            state.age = parseInt(ageInput.value, 10);
+            state.retireAge = parseInt(retireInput.value, 10);
+            goTo(3);
+        });
+
+        // ── Screen 3: Interstitial ──
+        // handled by data-goto
+
+        // ── Screen 4: Income ──
+        setupCurrencyInput($('input-income'), $('income-next'), $('income-error'));
+        enterToAdvance($('input-income'), $('income-next'));
+        $('income-next').addEventListener('click', () => {
+            state.income = parseCurrency($('input-income').value);
+            goTo(5);
+        });
+
+        // ── Screen 5: Savings ──
+        setupCurrencyInput($('input-savings'), $('savings-next'), $('savings-error'), true);
+        enterToAdvance($('input-savings'), $('savings-next'));
+        $('savings-next').addEventListener('click', () => {
+            state.savings = parseCurrency($('input-savings').value);
+            goTo(6);
+        });
+
+        // ── Screen 6: Monthly ──
+        setupCurrencyInput($('input-monthly'), $('monthly-next'), $('monthly-error'));
+        enterToAdvance($('input-monthly'), $('monthly-next'));
+        $('monthly-next').addEventListener('click', () => {
+            state.monthly = parseCurrency($('input-monthly').value);
+            goTo(7);
+            setTimeout(() => {
+                calculateAndShowResults();
+            }, 1800);
+        });
+
+        // ── Back arrows & data-goto buttons ──
+        document.querySelectorAll('[data-goto]').forEach(btn => {
+            if (btn.id && ['age-next', 'income-next', 'savings-next', 'monthly-next'].includes(btn.id)) return;
+            btn.addEventListener('click', () => {
+                goTo(parseInt(btn.dataset.goto, 10));
+            });
+        });
+
+        // ── Math ──
+        function calcProjected(currentSavings, monthlySavings, yearsLeft) {
+            if (yearsLeft <= 0) return currentSavings;
+            const monthlyRate = 0.07 / 12;
+            const months = yearsLeft * 12;
+            const fvSavings = currentSavings * Math.pow(1 + monthlyRate, months);
+            const fvContributions = monthlySavings * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+            return fvSavings + fvContributions;
+        }
+
+        // ── Results ──
+        let baseResults = {};
+
+        function calculateAndShowResults() {
+            const annualSavings = state.monthly * 12;
+            const expenses = state.income - annualSavings;
+            const target = expenses * 25;
+            const yearsLeft = state.retireAge - state.age;
+            const projected = calcProjected(state.savings, state.monthly, yearsLeft);
+            const pct = target > 0 ? Math.round((projected / target) * 100) : 0;
+
+            baseResults = { annualSavings, expenses, target, projected, pct, yearsLeft };
+
+            // Reset for re-entry (if user edited numbers)
+            document.querySelectorAll('#screen-8 .reveal').forEach(el => el.classList.remove('visible'));
+            $('ring-fill').style.strokeDashoffset = '471.24';
+
+            // Populate math breakdown
+            $('calc-income').textContent = fmtCurrency(state.income);
+            $('calc-annual-savings').textContent = fmtCurrency(annualSavings);
+            $('calc-expenses').textContent = fmtCurrency(expenses);
+            $('calc-target').textContent = fmtCurrency(target);
+            $('calc-projected').textContent = fmtCurrency(projected);
+
+            // Fine print
+            $('fp-projected').textContent = fmtCurrency(projected);
+            $('fp-target').textContent = fmtCurrency(target);
+            const gap = projected - target;
+            $('fp-gap').textContent = (gap >= 0 ? '+' : '') + fmtCurrency(Math.abs(gap));
+            if (gap < 0) $('fp-gap').textContent = '-' + fmtCurrency(Math.abs(gap));
+
+            // Ring
+            renderRing(pct);
+
+            // Verdict
+            renderVerdict(pct, projected, target);
+
+            // Initialize sliders
+            initSliders();
+
+            // Summary card
+            updateSummary();
+
+            goTo(8);
+
+            // Staggered reveal sequence
+            const reveals = [
+                { el: 'reveal-verdict', delay: 200 },
+                { el: 'reveal-explainer', delay: 600 },
+                { el: 'strategy-section', delay: 700 },
+                { el: 'summary-card', delay: 1100 },
+                { el: 'reveal-actions', delay: 1400 },
+                { el: 'reveal-footer', delay: 1700 }
+            ];
+            reveals.forEach(({ el, delay }) => {
+                setTimeout(() => {
+                    const node = $(el);
+                    if (node) node.classList.add('visible');
+                }, delay);
+            });
+        }
+
+        function renderRing(pct) {
+            const clamped = Math.min(pct, 100);
+            const circumference = 2 * Math.PI * 75; // 471.24
+            const offset = circumference * (1 - clamped / 100);
+            const ring = $('ring-fill');
+            const finalColor = pct >= 100 ? 'var(--low)' : pct >= 80 ? 'var(--medium)' : 'var(--critical)';
+
+            // Start with neutral amber, animate the arc
+            ring.style.stroke = 'var(--medium)';
+            $('ring-pct').textContent = '0%';
+            $('ring-pct').style.color = 'var(--text)';
+
+            setTimeout(() => {
+                ring.style.strokeDashoffset = offset;
+                // Count up the percentage in sync with the ring
+                animateCounter($('ring-pct'), 0, pct, 1200);
+            }, 100);
+
+            // Shift to final color after verdict is visible
+            setTimeout(() => {
+                ring.style.stroke = finalColor;
+                $('ring-pct').style.color = finalColor;
+            }, 900);
+        }
+
+        function animateCounter(el, from, to, duration) {
+            const start = performance.now();
+            function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease-out cubic for deceleration matching the ring
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(from + (to - from) * eased);
+                el.textContent = current + '%';
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function renderVerdict(pct, projected, target) {
+            let titleKey, bodyKey;
+            const moodCap = state.mood === 'ontrack' ? 'OnTrack' : state.mood === 'unsure' ? 'Unsure' : 'Behind';
+
+            if (pct >= 100) {
+                titleKey = 'verdictAheadTitle';
+                bodyKey = 'verdictAheadBody' + moodCap;
+            } else if (pct >= 80) {
+                titleKey = 'verdictOnTrackTitle';
+                bodyKey = 'verdictOnTrackBody' + moodCap;
+            } else {
+                titleKey = 'verdictShortfallTitle';
+                bodyKey = 'verdictShortfallBody' + moodCap;
+            }
+
+            $('verdict-title').textContent = projectContent[titleKey];
+            let bodyText = projectContent[bodyKey]
+                .replace(/\{\{projected\}\}/g, fmtCurrency(projected))
+                .replace(/\{\{target\}\}/g, fmtCurrency(target));
+            $('verdict-body').textContent = bodyText;
+        }
+
+        // ── Sliders ──
+        function initSliders() {
+            const sliderSave = $('slider-save');
+            const sliderTime = $('slider-time');
+            const sliderPt = $('slider-pt');
+
+            // Set ranges and initial values
+            sliderSave.min = state.monthly;
+            sliderSave.max = Math.min(Math.max(state.monthly * 5, 10000), Math.floor(state.income / 12));
+            sliderSave.value = state.monthly;
+
+            sliderTime.min = state.retireAge;
+            sliderTime.max = Math.min(state.retireAge + 10, 80);
+            sliderTime.value = state.retireAge;
+
+            sliderPt.min = 0;
+            sliderPt.max = 60000;
+            sliderPt.value = 0;
+
+            $('slider-save-value').textContent = fmtCurrency(state.monthly) + '/mo';
+            $('slider-time-value').textContent = state.retireAge;
+            $('slider-pt-value').textContent = '$0/yr';
+
+            sliderSave.addEventListener('input', recalcSliders);
+            sliderTime.addEventListener('input', recalcSliders);
+            sliderPt.addEventListener('input', recalcSliders);
+        }
+
+        function recalcSliders() {
+            const adjMonthly = parseInt($('slider-save').value, 10);
+            const adjRetireAge = parseInt($('slider-time').value, 10);
+            const adjPt = parseInt($('slider-pt').value, 10);
+
+            $('slider-save-value').textContent = fmtCurrency(adjMonthly) + '/mo';
+            $('slider-time-value').textContent = adjRetireAge;
+            $('slider-pt-value').textContent = fmtCurrency(adjPt) + '/yr';
+
+            const adjYears = adjRetireAge - state.age;
+            const adjProjected = calcProjected(state.savings, adjMonthly, adjYears);
+            const adjExpenses = Math.max(state.income - (adjMonthly * 12), 0);
+            const adjTarget = Math.max((adjExpenses - adjPt) * 25, 0);
+            const adjPct = adjTarget > 0 ? Math.round((adjProjected / adjTarget) * 100) : (adjProjected > 0 ? 100 : 0);
+
+            updateSummary(adjMonthly, adjRetireAge, adjPt, adjPct);
+        }
+
+        function updateSummary(adjMonthly, adjRetireAge, adjPt, adjPct) {
+            adjMonthly = adjMonthly || state.monthly;
+            adjRetireAge = adjRetireAge || state.retireAge;
+            adjPt = adjPt || 0;
+            adjPct = adjPct || baseResults.pct;
+
+            $('summary-current').textContent = fmtCurrency(state.monthly) + '/mo';
+            $('summary-orig-age').textContent = state.retireAge;
+            $('summary-adj-sav').textContent = fmtCurrency(adjMonthly) + '/mo';
+            $('summary-adj-age').textContent = adjRetireAge;
+            $('summary-adj-pt').textContent = fmtCurrency(adjPt) + '/yr';
+            $('summary-result').textContent = adjPct + '% funded';
+
+            // Color the result
+            let color = adjPct >= 100 ? 'var(--low)' : adjPct >= 80 ? 'var(--medium)' : 'var(--critical)';
+            $('summary-result').style.color = color;
+        }
+
+        // ── Fine Print Toggle ──
+        $('fine-print-toggle').addEventListener('click', () => {
+            const body = $('fine-print-body');
+            const toggle = $('fine-print-toggle');
+            const isOpen = body.classList.contains('open');
+            body.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', !isOpen);
+        });
+
+        // ── Actions ──
+        // ── Edit Numbers (back to screen 4) ──
+        $('edit-numbers').addEventListener('click', () => goTo(4));
+
+        $('action-save').addEventListener('click', () => window.print());
+
+        $('action-send').addEventListener('click', () => {
+            $('send-overlay').classList.add('open');
+            $('send-name').focus();
+        });
+
+        $('send-cancel').addEventListener('click', () => {
+            $('send-overlay').classList.remove('open');
+        });
+
+        $('send-overlay').addEventListener('click', (e) => {
+            if (e.target === $('send-overlay')) {
+                $('send-overlay').classList.remove('open');
+            }
+        });
+
+        // Focus trap for send modal
+        $('send-overlay').addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                $('send-overlay').classList.remove('open');
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            const focusable = $('send-overlay').querySelectorAll('input, textarea, button, [tabindex]:not([tabindex="-1"])');
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        });
+
+        $('send-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = $('send-name').value;
+            const email = $('send-email').value;
+            const note = $('send-note').value;
+
+            const subject = encodeURIComponent('Retirement readiness results from ' + name);
+            const body = encodeURIComponent(
+                'Name: ' + name + '\n' +
+                'Email: ' + email + '\n' +
+                'Age: ' + state.age + '\n' +
+                'Retirement age: ' + state.retireAge + '\n' +
+                'Income: ' + fmtCurrency(state.income) + '\n' +
+                'Current savings: ' + fmtCurrency(state.savings) + '\n' +
+                'Monthly savings: ' + fmtCurrency(state.monthly) + '\n' +
+                'Projected: ' + fmtCurrency(baseResults.projected) + '\n' +
+                'Target: ' + fmtCurrency(baseResults.target) + '\n' +
+                'Funded: ' + baseResults.pct + '%' +
+                (note ? '\n\nNote: ' + note : '')
+            );
+
+            window.location.href = 'mailto:marcus@example.com?subject=' + subject + '&body=' + body;
+
+            $('send-form-content').style.display = 'none';
+            $('send-success').classList.add('show');
+
+            setTimeout(() => {
+                $('send-overlay').classList.remove('open');
+                $('send-form-content').style.display = '';
+                $('send-success').classList.remove('show');
+                $('send-form').reset();
+            }, 3000);
+        });
+    });
+    </script>
+</body>
+
+</html>
