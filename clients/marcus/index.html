@@ -1272,10 +1272,14 @@
            PRINT STYLES
            ═══════════════════════════════════════════ */
         @media print {
+            @page { margin: 0.5in; size: letter; }
+
             body {
                 background: white;
                 display: block;
                 padding: 0;
+                font-size: 11px;
+                line-height: 1.4;
             }
 
             main {
@@ -1286,35 +1290,75 @@
                 padding: 0;
             }
 
+            /* Print header */
             .print-header {
                 display: block;
                 text-align: center;
-                margin-bottom: var(--space-xl);
-                padding-bottom: var(--space-md);
+                margin-bottom: 12px;
+                padding-bottom: 8px;
                 border-bottom: 2px solid var(--text);
             }
+            .print-header h1 { font-size: 16px; margin-bottom: 2px; }
+            .print-header p { font-size: 10px; color: var(--muted); }
 
-            .print-header h1 { font-size: var(--text-xl); margin-bottom: 4px; }
-            .print-header p { font-size: var(--text-sm); color: var(--muted); }
-
+            /* Hide interactive elements */
             .edit-numbers,
             .strategy-section,
             .actions-section,
             .send-overlay,
-            .results-footer { display: none; }
+            .results-footer,
+            .progress-bar { display: none !important; }
 
+            /* Hero: ring + verdict side by side, compact */
             .results-hero {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
+                gap: 16px;
+                margin-bottom: 16px;
             }
+            .results-hero .ring-section { margin-bottom: 0; }
+            .ring-wrap { width: 120px; height: 120px; }
+            .ring-pct { font-size: 22px; }
+            .ring-label { font-size: 9px; }
+            .results-hero .verdict-title { font-size: 16px; margin-bottom: 4px; }
+            .results-hero .verdict-body { font-size: 11px; line-height: 1.4; }
 
+            /* Explainer: keep single column, tighten */
             .results-columns {
                 grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 12px;
             }
 
+            .explainer-title { font-size: 13px; margin-bottom: 6px; }
+            .calc-table td { padding: 3px 0; font-size: 11px; }
+            .calc-table td:first-child { font-size: 10px; }
+
+            /* Summary card: compact */
             .summary-card {
                 box-shadow: none;
+                border: 1px solid var(--border);
+                padding: 10px 12px;
+                margin-top: 10px;
             }
+            .summary-card-title { font-size: 11px; margin-bottom: 6px; }
+            .summary-row { padding: 2px 0; font-size: 10px; }
+            .summary-row:last-child { font-size: 11px; padding-top: 4px; }
+
+            /* Fine print: force open for print */
+            .fine-print-toggle { display: none; }
+            .fine-print-body { display: block !important; padding: 4px 0; }
+            .fine-print-section { margin-bottom: 8px; }
+            .fine-print-row { padding: 2px 0; font-size: 10px; }
+
+            /* Prevent page breaks inside sections */
+            .results-hero,
+            .explainer-section,
+            .summary-card,
+            .fine-print-section { break-inside: avoid; }
+
+            /* Kill animations and reveals */
+            .reveal { opacity: 1 !important; transform: none !important; }
         }
     </style>
 </head>
