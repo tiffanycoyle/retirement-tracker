@@ -686,7 +686,7 @@
             stroke-width: 1;
         }
         .vault-fill-rect {
-            fill: url(#vaultGrad);
+            fill: url(#goldBars);
         }
         .vault-label {
             fill: var(--muted);
@@ -1498,11 +1498,30 @@
                     <div class="vault-wrap">
                         <svg viewBox="0 0 220 300" role="img" aria-label="Vault chamber showing retirement funding progress">
                             <defs>
-                                <linearGradient id="vaultGrad" x1="0" y1="1" x2="0.3" y2="0">
-                                    <stop offset="0%" stop-color="#92400E"/>
-                                    <stop offset="50%" stop-color="#D97706"/>
-                                    <stop offset="100%" stop-color="#F4BF3A"/>
+                                <!-- Gold bar gradient (top-lit bevel) -->
+                                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#F5D76E"/>
+                                    <stop offset="25%" stop-color="#D4A017"/>
+                                    <stop offset="75%" stop-color="#C49000"/>
+                                    <stop offset="100%" stop-color="#A67C00"/>
                                 </linearGradient>
+                                <!-- Alternating bar shade for depth -->
+                                <linearGradient id="barGrad2" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#E8C84A"/>
+                                    <stop offset="25%" stop-color="#C89614"/>
+                                    <stop offset="75%" stop-color="#B58700"/>
+                                    <stop offset="100%" stop-color="#9A7200"/>
+                                </linearGradient>
+                                <!-- Tiling bar pattern -->
+                                <pattern id="goldBars" patternUnits="userSpaceOnUse" x="40" y="4" width="140" height="36">
+                                    <!-- Row 1: 3 bars -->
+                                    <rect x="4" y="2" width="40" height="14" rx="2.5" fill="url(#barGrad)" stroke="#A67C00" stroke-width="0.5"/>
+                                    <rect x="50" y="2" width="40" height="14" rx="2.5" fill="url(#barGrad)" stroke="#A67C00" stroke-width="0.5"/>
+                                    <rect x="96" y="2" width="40" height="14" rx="2.5" fill="url(#barGrad)" stroke="#A67C00" stroke-width="0.5"/>
+                                    <!-- Row 2: 2 bars offset -->
+                                    <rect x="27" y="20" width="40" height="14" rx="2.5" fill="url(#barGrad2)" stroke="#9A7200" stroke-width="0.5"/>
+                                    <rect x="73" y="20" width="40" height="14" rx="2.5" fill="url(#barGrad2)" stroke="#9A7200" stroke-width="0.5"/>
+                                </pattern>
                                 <clipPath id="vaultClip">
                                     <path d="M40,268 L40,100 Q40,38 110,38 Q180,38 180,100 L180,268 Z"/>
                                 </clipPath>
@@ -1514,10 +1533,9 @@
                             <!-- Arched chamber interior -->
                             <path class="vault-interior" d="M40,268 L40,100 Q40,38 110,38 Q180,38 180,100 L180,268 Z"/>
 
-                            <!-- Gold fill (clipped to arch) -->
+                            <!-- Gold bars fill (clipped to arch) -->
                             <g clip-path="url(#vaultClip)">
                                 <rect id="vault-fill" class="vault-fill-rect" x="40" y="268" width="140" height="0"/>
-                                <ellipse id="vault-surface" cx="110" cy="268" rx="70" ry="7" fill="#ffd96c" opacity="0.7"/>
                             </g>
 
                             <!-- Corner bolts -->
@@ -2154,7 +2172,6 @@
             document.querySelectorAll('#screen-8 .reveal').forEach(el => el.classList.remove('visible'));
             $('vault-fill').setAttribute('y', '268');
             $('vault-fill').setAttribute('height', '0');
-            $('vault-surface').setAttribute('cy', '268');
 
             // Populate math breakdown
             $('calc-income').textContent = fmtCurrency(state.income);
@@ -2213,7 +2230,6 @@
             // Reset
             $('vault-fill').setAttribute('y', '268');
             $('vault-fill').setAttribute('height', '0');
-            $('vault-surface').setAttribute('cy', '268');
             $('vault-pct').textContent = '0%';
 
             // Update dynamic aria-label
@@ -2229,7 +2245,6 @@
         function animateVault(targetY, targetH, duration) {
             const startY = 268;
             const rect = $('vault-fill');
-            const surface = $('vault-surface');
             const start = performance.now();
 
             function tick(now) {
@@ -2239,7 +2254,6 @@
                 const y = startY - h;
                 rect.setAttribute('y', y);
                 rect.setAttribute('height', h);
-                surface.setAttribute('cy', y);
                 if (p < 1) requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
