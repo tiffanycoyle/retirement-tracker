@@ -665,42 +665,41 @@
             margin-bottom: var(--space-3xl);
         }
 
-        .jar-wrap {
-            width: 200px;
-            filter: drop-shadow(0 6px 14px rgba(146, 64, 14, 0.12));
+        .vault-wrap {
+            width: 180px;
+            filter: drop-shadow(0 8px 18px rgba(44, 37, 32, 0.12));
         }
-
-        .jar-glass {
-            fill: color-mix(in srgb, var(--surface) 68%, transparent);
-        }
-        .jar-stroke {
+        .vault-frame {
+            fill: var(--border);
             stroke: var(--border-strong);
+            stroke-width: 2;
         }
-        .jar-lid {
-            fill: color-mix(in srgb, var(--muted) 18%, var(--surface));
+        .vault-interior {
+            fill: var(--surface);
+            stroke: var(--border-strong);
+            stroke-width: 1.5;
         }
-        .jar-lid-line {
-            stroke: color-mix(in srgb, var(--text) 16%, transparent);
+        .vault-bolt {
+            fill: var(--border-strong);
+            stroke: var(--muted);
+            stroke-width: 1;
         }
-        .honey-fill {
-            fill: url(#honeyGradient);
+        .vault-fill-rect {
+            fill: url(#vaultGrad);
         }
-        .honey-sheen {
-            fill: color-mix(in srgb, #fff 54%, transparent);
-        }
-        .jar-label {
+        .vault-label {
             fill: var(--muted);
             font-family: var(--font);
             font-size: 10px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
         }
-        .money-chip {
-            fill: color-mix(in srgb, var(--surface) 88%, transparent);
+        .vault-chip {
+            fill: color-mix(in srgb, var(--surface) 90%, transparent);
             stroke: var(--border);
             stroke-width: 1;
         }
-        .money-chip-text {
+        .vault-chip-text {
             fill: var(--text);
             font-family: var(--font);
             font-size: 13px;
@@ -1201,7 +1200,7 @@
                 flex-direction: column;
             }
 
-            .jar-wrap { width: 180px; }
+            .vault-wrap { width: 160px; }
 
             .results-hero .verdict-title {
                 font-size: var(--text-xl);
@@ -1261,8 +1260,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .jar-wrap {
-                width: 170px;
+            .vault-wrap {
+                width: 150px;
             }
         }
 
@@ -1315,9 +1314,9 @@
                 margin-bottom: 16px;
             }
             .results-hero .ring-section { margin-bottom: 0; }
-            .jar-wrap { width: 110px; filter: none; }
-            .money-chip-text { font-size: 10px; }
-            .jar-label { font-size: 8px; }
+            .vault-wrap { width: 100px; filter: none; }
+            .vault-chip-text { font-size: 10px; }
+            .vault-label { font-size: 8px; }
             .results-hero .verdict-title { font-size: 16px; margin-bottom: 4px; }
             .results-hero .verdict-body { font-size: 11px; line-height: 1.4; }
 
@@ -1492,39 +1491,44 @@
             <!-- Hero: Ring + Verdict side by side -->
             <div class="results-hero">
                 <div class="ring-section">
-                    <div class="jar-wrap">
-                        <svg viewBox="0 0 260 320" role="img" aria-label="Honey jar showing retirement funding progress">
+                    <div class="vault-wrap">
+                        <svg viewBox="0 0 220 300" role="img" aria-label="Vault chamber showing retirement funding progress">
                             <defs>
-                                <linearGradient id="honeyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#ffe07a"/>
-                                    <stop offset="45%" stop-color="#f4bf3a"/>
-                                    <stop offset="100%" stop-color="#d68a14"/>
+                                <linearGradient id="vaultGrad" x1="0" y1="1" x2="0.3" y2="0">
+                                    <stop offset="0%" stop-color="#92400E"/>
+                                    <stop offset="50%" stop-color="#D97706"/>
+                                    <stop offset="100%" stop-color="#F4BF3A"/>
                                 </linearGradient>
-                                <clipPath id="jarClip">
-                                    <path d="M86 56h88c16 0 29 13 29 29v18c0 9 3 18 8 25 8 12 13 26 13 41v69c0 27-22 49-49 49H85c-27 0-49-22-49-49v-69c0-15 5-29 13-41 5-7 8-16 8-25V85c0-16 13-29 29-29z"/>
+                                <clipPath id="vaultClip">
+                                    <path d="M40,268 L40,100 Q40,38 110,38 Q180,38 180,100 L180,268 Z"/>
                                 </clipPath>
                             </defs>
 
-                            <!-- Lid -->
-                            <path class="jar-lid" d="M82 42c0-10 8-18 18-18h60c10 0 18 8 18 18v17H82z"/>
-                            <path class="jar-lid-line" d="M82 50h96" stroke-width="3" stroke-linecap="round" fill="none"/>
-                            <path class="jar-lid-line" d="M94 34h72" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <!-- Vault frame -->
+                            <rect class="vault-frame" x="18" y="18" width="184" height="264" rx="10"/>
 
-                            <!-- Glass body -->
-                            <path class="jar-glass jar-stroke" d="M86 56h88c16 0 29 13 29 29v18c0 9 3 18 8 25 8 12 13 26 13 41v69c0 27-22 49-49 49H85c-27 0-49-22-49-49v-69c0-15 5-29 13-41 5-7 8-16 8-25V85c0-16 13-29 29-29z" fill-opacity="0.86" stroke-width="3"/>
+                            <!-- Arched chamber interior -->
+                            <path class="vault-interior" d="M40,268 L40,100 Q40,38 110,38 Q180,38 180,100 L180,268 Z"/>
 
-                            <!-- Honey fill (clipped to jar) -->
-                            <g clip-path="url(#jarClip)">
-                                <rect id="honey-rect" class="honey-fill" x="36" y="273" width="188" height="0" rx="20"/>
-                                <ellipse id="honey-top" cx="130" cy="273" rx="94" ry="11" fill="#ffd96c" opacity="0.95"/>
-                                <ellipse id="honey-wave" cx="130" cy="270" rx="94" ry="16" fill="#f7cd59" opacity="0.38"/>
-                                <rect class="honey-sheen" x="58" y="92" width="20" height="164" rx="10" opacity="0.26"/>
+                            <!-- Gold fill (clipped to arch) -->
+                            <g clip-path="url(#vaultClip)">
+                                <rect id="vault-fill" class="vault-fill-rect" x="40" y="268" width="140" height="0"/>
+                                <ellipse id="vault-surface" cx="110" cy="268" rx="70" ry="7" fill="#ffd96c" opacity="0.7"/>
                             </g>
 
+                            <!-- Corner bolts -->
+                            <circle class="vault-bolt" cx="30" cy="30" r="5"/>
+                            <circle class="vault-bolt" cx="190" cy="30" r="5"/>
+                            <circle class="vault-bolt" cx="30" cy="270" r="5"/>
+                            <circle class="vault-bolt" cx="190" cy="270" r="5"/>
+
+                            <!-- Keystone accent -->
+                            <path d="M100,22 L110,14 L120,22" fill="none" stroke="var(--border-strong)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
                             <!-- Percentage chip + label -->
-                            <rect x="93" y="119" width="74" height="34" rx="17" class="money-chip"/>
-                            <text id="jar-pct" x="130" y="141" text-anchor="middle" class="money-chip-text">0%</text>
-                            <text x="130" y="172" text-anchor="middle" class="jar-label" data-content="ringLabel">funded</text>
+                            <rect x="73" y="128" width="74" height="34" rx="17" class="vault-chip"/>
+                            <text id="vault-pct" x="110" y="150" text-anchor="middle" class="vault-chip-text">0%</text>
+                            <text x="110" y="180" text-anchor="middle" class="vault-label" data-content="ringLabel">funded</text>
                         </svg>
                     </div>
                 </div>
@@ -2115,10 +2119,9 @@
 
             // Reset for re-entry (if user edited numbers)
             document.querySelectorAll('#screen-8 .reveal').forEach(el => el.classList.remove('visible'));
-            $('honey-rect').setAttribute('y', '273');
-            $('honey-rect').setAttribute('height', '0');
-            $('honey-top').setAttribute('cy', '273');
-            $('honey-wave').setAttribute('cy', '270');
+            $('vault-fill').setAttribute('y', '268');
+            $('vault-fill').setAttribute('height', '0');
+            $('vault-surface').setAttribute('cy', '268');
 
             // Populate math breakdown
             $('calc-income').textContent = fmtCurrency(state.income);
@@ -2167,29 +2170,27 @@
 
         function renderRing(pct) {
             const clamped = Math.min(pct, 100);
-            // Jar interior spans y=273 (bottom) to y=56 (top), usable fill height ~217
-            const maxH = 217;
+            // Vault interior spans y=268 (bottom) to y=38 (arch peak), fill height ~230
+            const maxH = 230;
             const fillH = maxH * (clamped / 100);
-            const targetY = 273 - fillH;
+            const targetY = 268 - fillH;
 
             // Reset
-            $('honey-rect').setAttribute('y', '273');
-            $('honey-rect').setAttribute('height', '0');
-            $('honey-top').setAttribute('cy', '273');
-            $('honey-wave').setAttribute('cy', '270');
-            $('jar-pct').textContent = '0%';
+            $('vault-fill').setAttribute('y', '268');
+            $('vault-fill').setAttribute('height', '0');
+            $('vault-surface').setAttribute('cy', '268');
+            $('vault-pct').textContent = '0%';
 
             setTimeout(() => {
-                animateJar(targetY, fillH, 1400);
-                animateCounter($('jar-pct'), 0, pct, 1200);
+                animateVault(targetY, fillH, 1400);
+                animateCounter($('vault-pct'), 0, pct, 1200);
             }, 100);
         }
 
-        function animateJar(targetY, targetH, duration) {
-            const startY = 273;
-            const rect = $('honey-rect');
-            const top = $('honey-top');
-            const wave = $('honey-wave');
+        function animateVault(targetY, targetH, duration) {
+            const startY = 268;
+            const rect = $('vault-fill');
+            const surface = $('vault-surface');
             const start = performance.now();
 
             function tick(now) {
@@ -2199,8 +2200,7 @@
                 const y = startY - h;
                 rect.setAttribute('y', y);
                 rect.setAttribute('height', h);
-                top.setAttribute('cy', y);
-                wave.setAttribute('cy', y - 2);
+                surface.setAttribute('cy', y);
                 if (p < 1) requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
