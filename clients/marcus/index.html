@@ -665,42 +665,46 @@
             margin-bottom: var(--space-3xl);
         }
 
-        .ring-wrap {
-            position: relative;
-            display: inline-block;
+        .jar-wrap {
             width: 200px;
-            height: 200px;
+            filter: drop-shadow(0 6px 14px rgba(146, 64, 14, 0.12));
         }
 
-        .vessel-bg {
-            fill: var(--surface);
-            stroke: var(--border);
-            stroke-width: 2;
+        .jar-glass {
+            fill: color-mix(in srgb, var(--surface) 68%, transparent);
         }
-
-        #vessel-fill {
-            transition: none;
+        .jar-stroke {
+            stroke: var(--border-strong);
         }
-
-        .ring-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+        .jar-lid {
+            fill: color-mix(in srgb, var(--muted) 18%, var(--surface));
         }
-
-        .ring-pct {
+        .jar-lid-line {
+            stroke: color-mix(in srgb, var(--text) 16%, transparent);
+        }
+        .honey-fill {
+            fill: url(#honeyGradient);
+        }
+        .honey-sheen {
+            fill: color-mix(in srgb, #fff 54%, transparent);
+        }
+        .jar-label {
+            fill: var(--muted);
             font-family: var(--font);
-            font-size: var(--text-3xl);
-            font-weight: 700;
-            line-height: 1;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
-
-        .ring-label {
-            font-size: var(--text-sm);
-            color: var(--muted);
-            margin-top: 2px;
+        .money-chip {
+            fill: color-mix(in srgb, var(--surface) 88%, transparent);
+            stroke: var(--border);
+            stroke-width: 1;
+        }
+        .money-chip-text {
+            fill: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 700;
         }
 
         /* Verdict */
@@ -1197,6 +1201,8 @@
                 flex-direction: column;
             }
 
+            .jar-wrap { width: 180px; }
+
             .results-hero .verdict-title {
                 font-size: var(--text-xl);
             }
@@ -1255,9 +1261,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .ring-wrap {
+            .jar-wrap {
                 width: 170px;
-                height: 170px;
             }
         }
 
@@ -1310,9 +1315,9 @@
                 margin-bottom: 16px;
             }
             .results-hero .ring-section { margin-bottom: 0; }
-            .ring-wrap { width: 120px; height: 120px; }
-            .ring-pct { font-size: 22px; }
-            .ring-label { font-size: 9px; }
+            .jar-wrap { width: 110px; filter: none; }
+            .money-chip-text { font-size: 10px; }
+            .jar-label { font-size: 8px; }
             .results-hero .verdict-title { font-size: 16px; margin-bottom: 4px; }
             .results-hero .verdict-body { font-size: 11px; line-height: 1.4; }
 
@@ -1487,23 +1492,40 @@
             <!-- Hero: Ring + Verdict side by side -->
             <div class="results-hero">
                 <div class="ring-section">
-                    <div class="ring-wrap">
-                        <svg viewBox="0 0 180 180" width="100%" height="100%">
+                    <div class="jar-wrap">
+                        <svg viewBox="0 0 260 320" role="img" aria-label="Honey jar showing retirement funding progress">
                             <defs>
-                                <clipPath id="vessel-clip"><circle cx="90" cy="90" r="74"/></clipPath>
-                                <linearGradient id="vessel-grad" x1="0" y1="1" x2="0" y2="0">
-                                    <stop offset="0%" stop-color="#92400E"/>
-                                    <stop offset="100%" stop-color="#D97706"/>
+                                <linearGradient id="honeyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#ffe07a"/>
+                                    <stop offset="45%" stop-color="#f4bf3a"/>
+                                    <stop offset="100%" stop-color="#d68a14"/>
                                 </linearGradient>
+                                <clipPath id="jarClip">
+                                    <path d="M86 56h88c16 0 29 13 29 29v18c0 9 3 18 8 25 8 12 13 26 13 41v69c0 27-22 49-49 49H85c-27 0-49-22-49-49v-69c0-15 5-29 13-41 5-7 8-16 8-25V85c0-16 13-29 29-29z"/>
+                                </clipPath>
                             </defs>
-                            <circle class="vessel-bg" cx="90" cy="90" r="75"/>
-                            <rect id="vessel-fill" clip-path="url(#vessel-clip)"
-                                x="15" y="165" width="150" height="0" fill="url(#vessel-grad)"/>
+
+                            <!-- Lid -->
+                            <path class="jar-lid" d="M82 42c0-10 8-18 18-18h60c10 0 18 8 18 18v17H82z"/>
+                            <path class="jar-lid-line" d="M82 50h96" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <path class="jar-lid-line" d="M94 34h72" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+                            <!-- Glass body -->
+                            <path class="jar-glass jar-stroke" d="M86 56h88c16 0 29 13 29 29v18c0 9 3 18 8 25 8 12 13 26 13 41v69c0 27-22 49-49 49H85c-27 0-49-22-49-49v-69c0-15 5-29 13-41 5-7 8-16 8-25V85c0-16 13-29 29-29z" fill-opacity="0.86" stroke-width="3"/>
+
+                            <!-- Honey fill (clipped to jar) -->
+                            <g clip-path="url(#jarClip)">
+                                <rect id="honey-rect" class="honey-fill" x="36" y="273" width="188" height="0" rx="20"/>
+                                <ellipse id="honey-top" cx="130" cy="273" rx="94" ry="11" fill="#ffd96c" opacity="0.95"/>
+                                <ellipse id="honey-wave" cx="130" cy="270" rx="94" ry="16" fill="#f7cd59" opacity="0.38"/>
+                                <rect class="honey-sheen" x="58" y="92" width="20" height="164" rx="10" opacity="0.26"/>
+                            </g>
+
+                            <!-- Percentage chip + label -->
+                            <rect x="93" y="119" width="74" height="34" rx="17" class="money-chip"/>
+                            <text id="jar-pct" x="130" y="141" text-anchor="middle" class="money-chip-text">0%</text>
+                            <text x="130" y="172" text-anchor="middle" class="jar-label" data-content="ringLabel">funded</text>
                         </svg>
-                        <div class="ring-center">
-                            <div class="ring-pct" id="ring-pct">0%</div>
-                            <div class="ring-label" data-content="ringLabel"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -2093,8 +2115,10 @@
 
             // Reset for re-entry (if user edited numbers)
             document.querySelectorAll('#screen-8 .reveal').forEach(el => el.classList.remove('visible'));
-            $('vessel-fill').setAttribute('y', '165');
-            $('vessel-fill').setAttribute('height', '0');
+            $('honey-rect').setAttribute('y', '273');
+            $('honey-rect').setAttribute('height', '0');
+            $('honey-top').setAttribute('cy', '273');
+            $('honey-wave').setAttribute('cy', '270');
 
             // Populate math breakdown
             $('calc-income').textContent = fmtCurrency(state.income);
@@ -2143,31 +2167,40 @@
 
         function renderRing(pct) {
             const clamped = Math.min(pct, 100);
-            const maxH = 150; // circle spans y=15 to y=165
+            // Jar interior spans y=273 (bottom) to y=56 (top), usable fill height ~217
+            const maxH = 217;
             const fillH = maxH * (clamped / 100);
-            const targetY = 165 - fillH;
-            const fill = $('vessel-fill');
+            const targetY = 273 - fillH;
 
-            fill.setAttribute('y', '165');
-            fill.setAttribute('height', '0');
-            $('ring-pct').textContent = '0%';
-            $('ring-pct').style.color = 'var(--text)';
+            // Reset
+            $('honey-rect').setAttribute('y', '273');
+            $('honey-rect').setAttribute('height', '0');
+            $('honey-top').setAttribute('cy', '273');
+            $('honey-wave').setAttribute('cy', '270');
+            $('jar-pct').textContent = '0%';
 
             setTimeout(() => {
-                animateVessel(fill, targetY, fillH, 1400);
-                animateCounter($('ring-pct'), 0, pct, 1200);
+                animateJar(targetY, fillH, 1400);
+                animateCounter($('jar-pct'), 0, pct, 1200);
             }, 100);
         }
 
-        function animateVessel(el, targetY, targetH, duration) {
-            const startY = 165;
+        function animateJar(targetY, targetH, duration) {
+            const startY = 273;
+            const rect = $('honey-rect');
+            const top = $('honey-top');
+            const wave = $('honey-wave');
             const start = performance.now();
+
             function tick(now) {
                 const p = Math.min((now - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+                const eased = 1 - Math.pow(1 - p, 3);
                 const h = targetH * eased;
-                el.setAttribute('y', startY - h);
-                el.setAttribute('height', h);
+                const y = startY - h;
+                rect.setAttribute('y', y);
+                rect.setAttribute('height', h);
+                top.setAttribute('cy', y);
+                wave.setAttribute('cy', y - 2);
                 if (p < 1) requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
