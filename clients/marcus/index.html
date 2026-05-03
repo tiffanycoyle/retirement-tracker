@@ -1273,14 +1273,14 @@
            PRINT STYLES
            ═══════════════════════════════════════════ */
         @media print {
-            @page { margin: 0.5in; size: letter; }
+            @page { margin: 0.6in; size: letter; }
 
             body {
                 background: white;
                 display: block;
                 padding: 0;
-                font-size: 11px;
-                line-height: 1.4;
+                font-size: 14px;
+                line-height: 1.5;
             }
 
             main {
@@ -1295,12 +1295,12 @@
             .print-header {
                 display: block;
                 text-align: center;
-                margin-bottom: 12px;
-                padding-bottom: 8px;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
                 border-bottom: 2px solid var(--text);
             }
-            .print-header h1 { font-size: 16px; margin-bottom: 2px; }
-            .print-header p { font-size: 10px; color: var(--muted); }
+            .print-header h1 { font-size: 22px; margin-bottom: 4px; }
+            .print-header p { font-size: 13px; color: var(--muted); }
 
             /* Hide interactive elements */
             .edit-numbers,
@@ -1310,47 +1310,47 @@
             .results-footer,
             .progress-bar { display: none !important; }
 
-            /* Hero: ring + verdict side by side, compact */
+            /* Hero: vault + verdict side by side */
             .results-hero {
                 flex-direction: row;
                 align-items: center;
-                gap: 16px;
-                margin-bottom: 16px;
+                gap: 24px;
+                margin-bottom: 24px;
             }
             .results-hero .ring-section { margin-bottom: 0; }
-            .vault-wrap { width: 100px; filter: none; }
-            .vault-chip-text { font-size: 10px; }
-            .vault-label { font-size: 8px; }
-            .results-hero .verdict-title { font-size: 16px; margin-bottom: 4px; }
-            .results-hero .verdict-body { font-size: 11px; line-height: 1.4; }
+            .vault-wrap { width: 160px; filter: none; }
+            .vault-chip-text { font-size: 13px; }
+            .vault-label { font-size: 10px; }
+            .results-hero .verdict-title { font-size: 20px; margin-bottom: 6px; }
+            .results-hero .verdict-body { font-size: 14px; line-height: 1.5; }
 
-            /* Explainer: keep single column, tighten */
+            /* Two-column: explainer + summary side by side */
             .results-columns {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                margin-bottom: 12px;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                margin-bottom: 16px;
             }
 
-            .explainer-title { font-size: 13px; margin-bottom: 6px; }
-            .calc-table td { padding: 3px 0; font-size: 11px; }
-            .calc-table td:first-child { font-size: 10px; }
+            .explainer-title { font-size: 16px; margin-bottom: 8px; }
+            .calc-table td { padding: 5px 0; font-size: 14px; }
+            .calc-table td:first-child { font-size: 13px; }
 
-            /* Summary card: compact */
+            /* Summary card */
             .summary-card {
                 box-shadow: none;
                 border: 1px solid var(--border);
-                padding: 10px 12px;
-                margin-top: 10px;
+                padding: 14px 16px;
+                margin-top: 0;
             }
-            .summary-card-title { font-size: 11px; margin-bottom: 6px; }
-            .summary-row { padding: 2px 0; font-size: 10px; }
-            .summary-row:last-child { font-size: 11px; padding-top: 4px; }
+            .summary-card-title { font-size: 14px; margin-bottom: 8px; }
+            .summary-row { padding: 4px 0; font-size: 13px; }
+            .summary-row:last-child { font-size: 14px; padding-top: 6px; }
 
             /* Fine print: force open for print */
             .fine-print-toggle { display: none; }
-            .fine-print-body { display: block !important; padding: 4px 0; }
-            .fine-print-section { margin-bottom: 8px; }
-            .fine-print-row { padding: 2px 0; font-size: 10px; }
+            .fine-print-body { display: block !important; padding: 6px 0; }
+            .fine-print-section { margin-bottom: 12px; }
+            .fine-print-row { padding: 3px 0; font-size: 13px; }
 
             /* Prevent page breaks inside sections */
             .results-hero,
@@ -2276,14 +2276,17 @@
         }
 
         // ── Sliders ──
+        let slidersInitialized = false;
         function initSliders() {
             const sliderSave = $('slider-save');
             const sliderTime = $('slider-time');
             const sliderPt = $('slider-pt');
 
             // Set ranges and initial values
+            const saveMax = Math.max(Math.min(Math.max(state.monthly * 5, 10000), Math.floor(state.income / 12)), state.monthly + 500);
             sliderSave.min = state.monthly;
-            sliderSave.max = Math.min(Math.max(state.monthly * 5, 10000), Math.floor(state.income / 12));
+            sliderSave.max = saveMax;
+            sliderSave.step = Math.max(50, Math.round((saveMax - state.monthly) / 50) > 0 ? 50 : 10);
             sliderSave.value = state.monthly;
 
             sliderTime.min = state.retireAge;
@@ -2298,9 +2301,13 @@
             $('slider-time-value').textContent = state.retireAge;
             $('slider-pt-value').textContent = '$0/yr';
 
-            sliderSave.addEventListener('input', recalcSliders);
-            sliderTime.addEventListener('input', recalcSliders);
-            sliderPt.addEventListener('input', recalcSliders);
+            // Attach listeners only once
+            if (!slidersInitialized) {
+                sliderSave.addEventListener('input', recalcSliders);
+                sliderTime.addEventListener('input', recalcSliders);
+                sliderPt.addEventListener('input', recalcSliders);
+                slidersInitialized = true;
+            }
         }
 
         function recalcSliders() {
