@@ -6,30 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Readiness | Marcus Cole</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+
     <style>
         /* ═══════════════════════════════════════════
            DESIGN TOKENS
            ═══════════════════════════════════════════ */
         :root {
             /* Risk Colors */
-            --critical: #dc2626;
+            --critical: #B91C1C;
             --critical-soft: #fef2f2;
             --critical-light: #fca5a5;
             --high: #ea580c;
-            --medium: #ca8a04;
+            --medium: #92400E;
             --medium-soft: #fefce8;
-            --low: #65a30d;
+            --low: #166534;
 
-            /* Surface & Text (Tailwind Stone palette) */
-            --bg: #fafaf9;
+            /* Surface & Text (warm linen palette) */
+            --bg: #FAF8F5;
             --surface: #ffffff;
-            --surface-hover: #f5f5f4;
-            --border: #e7e5e4;
-            --border-strong: #d6d3d1;
-            --text: #1c1917;
-            --muted: #57534e;
-            --remediation-bg: #f0fdf4;
-            --focus-ring: 0 0 0 3px rgba(70, 100, 180, 0.35);
+            --surface-hover: #F5F1EC;
+            --border: #E2DCD5;
+            --border-strong: #C9C1B6;
+            --text: #2C2520;
+            --muted: #6B5E52;
+            --remediation-bg: #EEF5F0;
+            --focus-ring: 0 0 0 3px rgba(45, 90, 61, 0.35);
 
             /* Spacing */
             --space-xs: 8px;
@@ -40,8 +44,9 @@
             --space-2xl: 48px;
             --space-3xl: 64px;
 
-            /* Typography — system font stack */
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            /* Typography — Literata (headings) + Atkinson Hyperlegible (body) */
+            --font-heading: "Literata", Georgia, serif;
+            --font: "Atkinson Hyperlegible Next", -apple-system, sans-serif;
             --text-xs: 0.75rem;
             --text-sm: 0.875rem;
             --text-base: 1rem;
@@ -107,7 +112,7 @@
         }
 
         h1, h2, h3, .font-heading {
-            font-family: var(--font);
+            font-family: var(--font-heading);
             font-weight: 600;
             color: var(--text);
             line-height: 1.2;
@@ -126,7 +131,7 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-family: Georgia, "Times New Roman", serif;
+            font-family: var(--font-heading);
             font-size: 26px;
             font-weight: 700;
             letter-spacing: -0.01em;
