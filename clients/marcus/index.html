@@ -1554,6 +1554,10 @@
                             <td id="calc-income"></td>
                         </tr>
                         <tr>
+                            <td data-content="calcLabelCurrentSavings"></td>
+                            <td id="calc-current-savings"></td>
+                        </tr>
+                        <tr>
                             <td data-content="calcLabelSavings"></td>
                             <td id="calc-annual-savings"></td>
                         </tr>
@@ -1787,6 +1791,7 @@
         ringLabel: "funded",
         explainerTitle: "Your starting point",
         calcLabelIncome: "Annual income",
+        calcLabelCurrentSavings: "Saved so far",
         calcLabelSavings: "Annual savings at your current pace",
         calcLabelExpenses: "Estimated annual spending",
         calcLabelTarget: "Retirement target (25x your spending)",
@@ -2153,6 +2158,7 @@
 
             // Populate math breakdown
             $('calc-income').textContent = fmtCurrency(state.income);
+            $('calc-current-savings').textContent = fmtCurrency(state.savings);
             $('calc-annual-savings').textContent = fmtCurrency(annualSavings);
             $('calc-expenses').textContent = fmtCurrency(expenses);
             $('calc-target').textContent = fmtCurrency(target);
