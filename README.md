@@ -5,3 +5,4 @@
   mobile-friendly, accessible, system-font typography, warm neutral palette, and frictionless
   micro-interactions. Claude applies the client's voice and design system consistently because of the
   rules and content dictionary structured in the project folder.
+
