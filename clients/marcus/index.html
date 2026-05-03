@@ -126,7 +126,7 @@
             width: 64px;
             height: 64px;
             margin: 0 auto var(--space-lg);
-            background: linear-gradient(145deg, #166534 0%, #14532d 100%);
+            background: #166534;
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -137,7 +137,6 @@
             font-weight: 700;
             letter-spacing: -0.01em;
             line-height: 1;
-            box-shadow: 0 1px 2px rgba(20, 83, 45, 0.18), 0 4px 12px rgba(20, 83, 45, 0.18);
         }
 
         /* Card divider */
@@ -167,11 +166,13 @@
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
             height: 3px;
             background: var(--text);
             border-radius: 16px 0 0 0;
-            transition: width 400ms var(--ease-out);
-            width: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 400ms var(--ease-out);
         }
 
         /* Hide on opener and results */
@@ -397,6 +398,13 @@
             border-color: var(--text);
             background: var(--surface);
             box-shadow: 0 0 0 1px var(--text);
+            animation: moodPulse 400ms var(--ease-out) forwards;
+        }
+
+        @keyframes moodPulse {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.04); }
+            100% { transform: scale(1); }
         }
 
         .mood-card:active { transform: scale(0.98); }
@@ -465,6 +473,7 @@
         .sentence-input:focus {
             outline: none;
             border-bottom-color: var(--text);
+            border-bottom-width: 2.5px;
         }
 
         .sentence-input:focus-visible {
@@ -695,6 +704,21 @@
             letter-spacing: 0.18em;
             text-transform: uppercase;
         }
+        /* Vault shimmer overlay — sweeps after fill animation */
+        .vault-shimmer {
+            fill: url(#shimmerGrad);
+            opacity: 0;
+        }
+
+        .vault-shimmer.active {
+            animation: shimmerSweep 1200ms var(--ease-out) forwards;
+        }
+
+        @keyframes shimmerSweep {
+            0% { opacity: 0.6; transform: translateX(-140px); }
+            100% { opacity: 0; transform: translateX(140px); }
+        }
+
         .vault-chip {
             fill: color-mix(in srgb, var(--surface) 90%, transparent);
             stroke: var(--border);
@@ -721,6 +745,13 @@
         .verdict-body {
             color: var(--muted);
             line-height: 1.7;
+        }
+
+        .verdict-recommendation {
+            color: var(--text);
+            font-weight: 500;
+            line-height: 1.7;
+            margin-top: var(--space-md);
         }
 
         /* Two-column layout: Starting Point + Strategy */
@@ -824,31 +855,23 @@
 
         .strategy-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--text);
-            border: 3px solid var(--bg);
+            border: 8px solid var(--bg);
             box-shadow: 0 1px 4px rgba(0,0,0,0.2);
             cursor: pointer;
-            /* 44px touch target via transparent border padding */
-            background-clip: padding-box;
         }
 
         .strategy-slider::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--text);
-            border: 3px solid var(--bg);
+            border: 8px solid var(--bg);
             box-shadow: 0 1px 4px rgba(0,0,0,0.2);
             cursor: pointer;
-        }
-
-        /* Ensure 44px touch area on the track itself */
-        .strategy-slider {
-            padding: 10px 0;
-            margin: -10px 0;
         }
 
         .strategy-slider:focus-visible {
@@ -901,6 +924,18 @@
         .summary-result-pct {
             font-family: var(--font);
             font-weight: 700;
+            transition: transform 200ms var(--ease-out);
+            display: inline-block;
+        }
+
+        .summary-result-pct.bump {
+            animation: resultBump 300ms var(--ease-out);
+        }
+
+        @keyframes resultBump {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.08); }
+            100% { transform: scale(1); }
         }
 
         /* Fine Print */
@@ -1114,16 +1149,42 @@
 
         .send-success.show { display: block; }
 
+        .send-success .btn {
+            margin-top: var(--space-lg);
+        }
+
         .send-success-check {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
-            background: var(--remediation-bg);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: var(--space-md);
-            font-size: 1.5rem;
+            margin: 0 auto var(--space-md);
+        }
+
+        .send-success-check svg {
+            stroke: #166534;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .send-success-check .check-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            animation: checkCircleDraw 600ms var(--ease-out-expo) forwards;
+        }
+
+        .send-success-check .check-mark {
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: checkMarkDraw 400ms var(--ease-out-expo) 400ms forwards;
+        }
+
+        @keyframes checkCircleDraw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes checkMarkDraw {
+            to { stroke-dashoffset: 0; }
         }
 
         /* Footer */
@@ -1310,6 +1371,9 @@
             .results-footer,
             .progress-bar { display: none !important; }
 
+            /* Show summary card in print (it's inside explainer column) */
+            .summary-card { display: block !important; }
+
             /* Hero: vault + verdict side by side */
             .results-hero {
                 flex-direction: row;
@@ -1415,6 +1479,7 @@
 
         <!-- ═══ SCREEN 3: INTERSTITIAL ═══ -->
         <section class="screen" id="screen-3">
+            <button class="back-arrow" type="button" data-goto="2" aria-label="Go back">&larr;</button>
             <div class="interstitial">
                 <h2 data-content="interstitialTitle"></h2>
                 <p data-content="interstitialBody"></p>
@@ -1525,6 +1590,13 @@
                                 <clipPath id="vaultClip">
                                     <path d="M40,268 L40,100 Q40,38 110,38 Q180,38 180,100 L180,268 Z"/>
                                 </clipPath>
+                                <!-- Shimmer gradient for post-fill gleam -->
+                                <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+                                    <stop offset="40%" stop-color="rgba(255,255,255,0.35)"/>
+                                    <stop offset="60%" stop-color="rgba(255,255,255,0.35)"/>
+                                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                                </linearGradient>
                             </defs>
 
                             <!-- Vault frame -->
@@ -1536,6 +1608,7 @@
                             <!-- Gold bars fill (clipped to arch) -->
                             <g clip-path="url(#vaultClip)">
                                 <rect id="vault-fill" class="vault-fill-rect" x="40" y="268" width="140" height="0"/>
+                                <rect id="vault-shimmer" class="vault-shimmer" x="40" y="38" width="140" height="230"/>
                             </g>
 
                             <!-- Corner bolts -->
@@ -1558,6 +1631,7 @@
                 <div class="verdict-section reveal" id="reveal-verdict">
                     <h2 class="verdict-title" id="verdict-title"></h2>
                     <p class="verdict-body" id="verdict-body"></p>
+                    <p class="verdict-recommendation" id="verdict-recommendation"></p>
                 </div>
             </div>
 
@@ -1684,6 +1758,7 @@
                         <span data-content="finePrintMethodLabel"></span>
                         <span data-content="finePrintMethodValue"></span>
                     </div>
+                    <p style="font-size: var(--text-sm); color: var(--muted); margin-top: var(--space-sm); line-height: 1.5;" data-content="finePrintMethodExplainer"></p>
                 </div>
             </div>
 
@@ -1738,8 +1813,14 @@
                     </form>
                 </div>
                 <div class="send-success" id="send-success">
-                    <div class="send-success-check">&#10003;</div>
+                    <div class="send-success-check">
+                        <svg viewBox="0 0 52 52" width="48" height="48">
+                            <circle class="check-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="check-mark" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
                     <p class="font-heading" data-content="sendSuccessText" style="font-size: var(--text-lg);"></p>
+                    <button class="btn btn-primary" type="button" id="send-done">Done</button>
                 </div>
             </div>
         </div>
@@ -1833,6 +1914,9 @@
         verdictShortfallBodyUnsure: "Now you know. If you keep saving at this rate, you\u2019ll end up with around {{projected}} in your retirement fund by the time you stop working. From the answers you gave, your target should be around {{target}}. That\u2019s a big difference between where you\u2019re headed and where you need to be, but you just took the first step in closing it by getting to know your actual numbers. Three ways to move them are below.",
         verdictShortfallBodyBehind: "You had a feeling, and your numbers point in that direction. Running the numbers forward, you\u2019re on pace for about {{projected}}. Your current target is {{target}}. That\u2019s a meaningful shortfall. But this is the part most calculators get wrong: they show you the gap and leave you there. People close the tab and don\u2019t come back. I\u2019d rather show you what closing the gap actually looks like. Three ways to move it are below.",
 
+        // Screen 8: Results - Recommendation (dynamic, set in JS)
+        // These are templates; {{extra}}, {{target_monthly}}, {{mood_label}} are replaced in renderRecommendation()
+
         // Screen 8: Results - Strategies
         strategySectionTitle: "Here\u2019s what would change it.",
         strategyCardSaveTitle: "Save more each month",
@@ -1860,7 +1944,8 @@
         finePrintReturnLabel: "Assumed annual return",
         finePrintReturnValue: "7%",
         finePrintMethodLabel: "Method",
-        finePrintMethodValue: "25x annual spending",
+        finePrintMethodValue: "25\u00d7 annual spending",
+        finePrintMethodExplainer: "Financial planners use 25 times your annual spending as a retirement target. That gives you enough to withdraw about 4% per year without running out.",
 
         // Screen 8: Results - Actions & Send Form
         actionsSectionTitle: "Bring this to the call.",
@@ -1899,9 +1984,9 @@
         const moodContainer = document.getElementById('mood-grid-container');
         if (moodContainer && projectContent.moodOptions) {
             moodContainer.innerHTML = '';
-            projectContent.moodOptions.forEach(opt => {
+            projectContent.moodOptions.forEach((opt, idx) => {
                 moodContainer.innerHTML += `
-                    <button class="mood-card" type="button" role="radio" aria-checked="false" data-mood="${opt.id}">
+                    <button class="mood-card" type="button" role="radio" aria-checked="false" data-mood="${opt.id}" tabindex="${idx === 0 ? '0' : '-1'}">
                         <span class="mood-emoji">${opt.emoji}</span>
                         <span class="mood-label">${opt.label}</span>
                     </button>`;
@@ -1965,7 +2050,7 @@
             // Update progress bar
             const pct = progressSteps[n] || 0;
             const bar = $('progress-bar');
-            bar.style.width = pct + '%';
+            bar.style.transform = 'scaleX(' + (pct / 100) + ')';
             bar.setAttribute('aria-valuenow', pct);
 
             // Save progress (skip loading/results screens)
@@ -2043,7 +2128,7 @@
             });
         });
 
-        // Arrow-key navigation for radiogroup
+        // Arrow-key navigation for radiogroup (roving tabindex)
         document.getElementById('mood-grid-container').addEventListener('keydown', (e) => {
             if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
             const cards = [...moodCards()];
@@ -2053,6 +2138,8 @@
             const next = e.key === 'ArrowRight'
                 ? (current + 1) % cards.length
                 : (current - 1 + cards.length) % cards.length;
+            cards[current].setAttribute('tabindex', '-1');
+            cards[next].setAttribute('tabindex', '0');
             cards[next].focus();
         });
 
@@ -2160,7 +2247,7 @@
 
         function calculateAndShowResults() {
             const annualSavings = state.monthly * 12;
-            const expenses = state.income - annualSavings;
+            const expenses = Math.max(state.income - annualSavings, 0);
             const target = expenses * 25;
             const yearsLeft = state.retireAge - state.age;
             const projected = calcProjected(state.savings, state.monthly, yearsLeft);
@@ -2178,6 +2265,11 @@
             $('calc-current-savings').textContent = fmtCurrency(state.savings);
             $('calc-annual-savings').textContent = fmtCurrency(annualSavings);
             $('calc-expenses').textContent = fmtCurrency(expenses);
+            // Soft warning if savings exceed income
+            if (annualSavings > state.income) {
+                $('calc-expenses').textContent = fmtCurrency(0);
+                $('calc-expenses').closest('tr').querySelector('td:first-child').textContent = 'Estimated annual spending (savings exceed income)';
+            }
             $('calc-target').textContent = fmtCurrency(target);
             $('calc-projected').textContent = fmtCurrency(projected);
 
@@ -2218,6 +2310,11 @@
                     if (node) node.classList.add('visible');
                 }, delay);
             });
+            // Focus verdict heading after last reveal
+            setTimeout(() => {
+                const verdictEl = $('verdict-title');
+                if (verdictEl) { verdictEl.setAttribute('tabindex', '-1'); verdictEl.focus(); }
+            }, 1800);
         }
 
         function renderRing(pct) {
@@ -2231,10 +2328,18 @@
             $('vault-fill').setAttribute('y', '268');
             $('vault-fill').setAttribute('height', '0');
             $('vault-pct').textContent = '0%';
+            $('vault-pct').setAttribute('fill', 'var(--text)');
+            const shimmer = $('vault-shimmer');
+            if (shimmer) shimmer.classList.remove('active');
 
-            // Update dynamic aria-label
+            // Update dynamic aria-label and overfunded label
             const vaultSvg = $('vault-fill').closest('svg');
             if (vaultSvg) vaultSvg.setAttribute('aria-label', 'Vault showing ' + pct + '% funded');
+            const labelEl = document.querySelector('[data-content="ringLabel"]');
+            if (labelEl) labelEl.textContent = pct > 100 ? 'of target' : 'funded';
+
+            // Remove slider transition for entrance animation
+            $('vault-fill').style.transition = '';
 
             setTimeout(() => {
                 animateVault(targetY, fillH, 1400);
@@ -2254,20 +2359,36 @@
                 const y = startY - h;
                 rect.setAttribute('y', y);
                 rect.setAttribute('height', h);
-                if (p < 1) requestAnimationFrame(tick);
+                if (p < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    // Trigger shimmer gleam after fill completes
+                    const shimmer = $('vault-shimmer');
+                    if (shimmer) {
+                        shimmer.classList.remove('active');
+                        void shimmer.offsetWidth;
+                        shimmer.classList.add('active');
+                    }
+                }
             }
             requestAnimationFrame(tick);
         }
 
         function animateCounter(el, from, to, duration) {
+            const finalColor = to >= 100 ? '#166534' : to >= 80 ? '#92400E' : '#B91C1C';
             const start = performance.now();
             function tick(now) {
                 const elapsed = now - start;
                 const progress = Math.min(elapsed / duration, 1);
-                // Ease-out cubic for deceleration matching the ring
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const current = Math.round(from + (to - from) * eased);
                 el.textContent = current + '%';
+                // Shift to risk color in the last 30% of the animation
+                if (progress > 0.7) {
+                    const colorProgress = (progress - 0.7) / 0.3;
+                    el.style.opacity = 1;
+                    el.setAttribute('fill', finalColor);
+                }
                 if (progress < 1) requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
@@ -2293,6 +2414,42 @@
                 .replace(/\{\{projected\}\}/g, fmtCurrency(projected))
                 .replace(/\{\{target\}\}/g, fmtCurrency(target));
             $('verdict-body').textContent = bodyText;
+
+            // Recommendation line
+            renderRecommendation(pct, projected, target);
+        }
+
+        function calcRequiredMonthly(currentSavings, targetAmount, yearsLeft) {
+            if (yearsLeft <= 0) return 0;
+            const monthlyRate = 0.07 / 12;
+            const months = yearsLeft * 12;
+            const fvSavings = currentSavings * Math.pow(1 + monthlyRate, months);
+            const remaining = targetAmount - fvSavings;
+            if (remaining <= 0) return 0;
+            return remaining / ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+        }
+
+        function renderRecommendation(pct, projected, target) {
+            const el = $('verdict-recommendation');
+            const moodLabel = state.mood === 'behind' ? 'behind' : state.mood === 'unsure' ? 'not sure' : 'on track';
+            const yearsLeft = state.retireAge - state.age;
+
+            if (pct < 80) {
+                // Shortfall: calculate what monthly savings would close the gap
+                const needed = Math.ceil(calcRequiredMonthly(state.savings, target, yearsLeft));
+                const extra = needed - state.monthly;
+                if (extra > 0) {
+                    el.textContent = 'You said you felt ' + moodLabel + '. A good starting point would be to save about ' + fmtCurrency(extra) + ' more each month to reach your target by retirement. You can also look at some other options below.';
+                } else {
+                    el.textContent = 'You said you felt ' + moodLabel + '. The options below show you what would move the number.';
+                }
+            } else if (pct >= 100) {
+                // Ahead
+                el.textContent = 'You said you felt ' + moodLabel + '. Based on these numbers, you have room. You could retire a little earlier, or save a little less and free up cash now. The sliders below let you see what that looks like.';
+            } else {
+                // On track (80-99%)
+                el.textContent = 'You said you felt ' + moodLabel + '. You are close. A little more each month or an extra year of working would probably get you the rest of the way. Use the sliders below to see what moves it.';
+            }
         }
 
         // ── Sliders ──
@@ -2346,6 +2503,26 @@
             const adjPct = adjTarget > 0 ? Math.round((adjProjected / adjTarget) * 100) : (adjProjected > 0 ? 100 : 0);
 
             updateSummary(adjMonthly, adjRetireAge, adjPt, adjPct);
+            updateVaultFromSlider(adjPct);
+        }
+
+        function updateVaultFromSlider(pct) {
+            const clamped = Math.min(pct, 100);
+            const maxH = 230;
+            const fillH = maxH * (clamped / 100);
+            const y = 268 - fillH;
+            const rect = $('vault-fill');
+            rect.style.transition = 'y 200ms ease-out, height 200ms ease-out';
+            rect.setAttribute('y', y);
+            rect.setAttribute('height', fillH);
+            // Update percentage chip
+            $('vault-pct').textContent = pct + '%';
+            // Update label for overfunded
+            const labelEl = document.querySelector('[data-content="ringLabel"]');
+            if (labelEl) labelEl.textContent = pct > 100 ? 'of target' : 'funded';
+            // Update aria
+            const vaultSvg = rect.closest('svg');
+            if (vaultSvg) vaultSvg.setAttribute('aria-label', 'Vault showing ' + pct + '% funded');
         }
 
         function updateSummary(adjMonthly, adjRetireAge, adjPt, adjPct) {
@@ -2364,6 +2541,12 @@
             // Color the result
             let color = adjPct >= 100 ? 'var(--low)' : adjPct >= 80 ? 'var(--medium)' : 'var(--critical)';
             $('summary-result').style.color = color;
+
+            // Subtle bump animation on change
+            const resultEl = $('summary-result');
+            resultEl.classList.remove('bump');
+            void resultEl.offsetWidth;
+            resultEl.classList.add('bump');
         }
 
         // ── Fine Print Toggle ──
@@ -2376,8 +2559,8 @@
         });
 
         // ── Actions ──
-        // ── Edit Numbers (back to screen 4) ──
-        $('edit-numbers').addEventListener('click', () => goTo(2));
+        // ── Edit Numbers (back to screen 4 — income) ──
+        $('edit-numbers').addEventListener('click', () => goTo(4));
 
         $('action-save').addEventListener('click', () => window.print());
 
@@ -2422,31 +2605,52 @@
             const note = $('send-note').value;
 
             const subject = encodeURIComponent('Retirement readiness results from ' + name);
-            const body = encodeURIComponent(
-                'Name: ' + name + '\n' +
-                'Email: ' + email + '\n' +
-                'Age: ' + state.age + '\n' +
-                'Retirement age: ' + state.retireAge + '\n' +
-                'Income: ' + fmtCurrency(state.income) + '\n' +
-                'Current savings: ' + fmtCurrency(state.savings) + '\n' +
-                'Monthly savings: ' + fmtCurrency(state.monthly) + '\n' +
-                'Projected: ' + fmtCurrency(baseResults.projected) + '\n' +
-                'Target: ' + fmtCurrency(baseResults.target) + '\n' +
-                'Funded: ' + baseResults.pct + '%' +
-                (note ? '\n\nNote: ' + note : '')
-            );
+
+            // Include adjusted values if sliders were changed
+            const adjMonthly = parseInt($('slider-save').value, 10);
+            const adjRetireAge = parseInt($('slider-time').value, 10);
+            const adjPt = parseInt($('slider-pt').value, 10);
+            const hasAdjustments = adjMonthly !== state.monthly || adjRetireAge !== state.retireAge || adjPt > 0;
+
+            let emailLines = [
+                'Name: ' + name,
+                'Email: ' + email,
+                'Age: ' + state.age,
+                'Retirement age: ' + state.retireAge,
+                'Income: ' + fmtCurrency(state.income),
+                'Current savings: ' + fmtCurrency(state.savings),
+                'Monthly savings: ' + fmtCurrency(state.monthly),
+                'Projected: ' + fmtCurrency(baseResults.projected),
+                'Target: ' + fmtCurrency(baseResults.target),
+                'Funded: ' + baseResults.pct + '%'
+            ];
+
+            if (hasAdjustments) {
+                emailLines.push('');
+                emailLines.push('--- Adjusted scenario ---');
+                if (adjMonthly !== state.monthly) emailLines.push('Adjusted monthly savings: ' + fmtCurrency(adjMonthly));
+                if (adjRetireAge !== state.retireAge) emailLines.push('Adjusted retirement age: ' + adjRetireAge);
+                if (adjPt > 0) emailLines.push('Part-time income: ' + fmtCurrency(adjPt) + '/yr');
+                emailLines.push('Adjusted result: ' + $('summary-result').textContent);
+            }
+
+            if (note) { emailLines.push(''); emailLines.push('Note: ' + note); }
+
+            const body = encodeURIComponent(emailLines.join('\n'));
 
             window.location.href = 'mailto:marcus@example.com?subject=' + subject + '&body=' + body;
 
             $('send-form-content').style.display = 'none';
             $('send-success').classList.add('show');
+            $('send-done').focus();
+        });
 
-            setTimeout(() => {
-                $('send-overlay').classList.remove('open');
-                $('send-form-content').style.display = '';
-                $('send-success').classList.remove('show');
-                $('send-form').reset();
-            }, 3000);
+        // Done button closes send overlay
+        $('send-done').addEventListener('click', () => {
+            $('send-overlay').classList.remove('open');
+            $('send-form-content').style.display = '';
+            $('send-success').classList.remove('show');
+            $('send-form').reset();
         });
 
         // ── Resume saved session ──
