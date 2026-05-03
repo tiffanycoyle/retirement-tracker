@@ -866,7 +866,8 @@
             color: var(--text);
             border-radius: 6px;
             padding: var(--space-lg);
-            margin-bottom: var(--space-2xl);
+            margin-top: var(--space-md);
+            margin-bottom: 0;
             border: 1px solid var(--border);
         }
 
@@ -902,8 +903,7 @@
 
         /* Fine Print */
         .fine-print-section {
-            margin-top: var(--space-md);
-            margin-bottom: 0;
+            margin-bottom: var(--space-lg);
         }
 
         .fine-print-toggle {
@@ -1492,30 +1492,32 @@
                         </tr>
                     </table>
 
-                    <!-- Fine Print (How the math works) -->
-                    <div class="fine-print-section">
-                        <button class="fine-print-toggle" id="fine-print-toggle" type="button" aria-expanded="false" data-content="finePrintToggle"></button>
-                        <div class="fine-print-body" id="fine-print-body">
-                            <div class="fine-print-row">
-                                <span data-content="finePrintProjected"></span>
-                                <span id="fp-projected"></span>
-                            </div>
-                            <div class="fine-print-row">
-                                <span data-content="finePrintTarget"></span>
-                                <span id="fp-target"></span>
-                            </div>
-                            <div class="fine-print-row">
-                                <span data-content="finePrintGapDef"></span>
-                                <span id="fp-gap"></span>
-                            </div>
-                            <div class="fine-print-row">
-                                <span data-content="finePrintReturnLabel"></span>
-                                <span data-content="finePrintReturnValue"></span>
-                            </div>
-                            <div class="fine-print-row">
-                                <span data-content="finePrintMethodLabel"></span>
-                                <span data-content="finePrintMethodValue"></span>
-                            </div>
+                    <!-- Summary Card (Your adjusted picture) -->
+                    <div class="summary-card reveal" id="summary-card">
+                        <div class="summary-card-title" data-content="summaryCardTitle"></div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelCurrent"></span>
+                            <span id="summary-current"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelOriginalAge"></span>
+                            <span id="summary-orig-age"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelAdjSav"></span>
+                            <span id="summary-adj-sav"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelAdjAge"></span>
+                            <span id="summary-adj-age"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelAdjPt"></span>
+                            <span id="summary-adj-pt"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-row-label" data-content="summaryLabelResult"></span>
+                            <span id="summary-result" class="summary-result-pct" aria-live="polite"></span>
                         </div>
                     </div>
                 </div>
@@ -1557,32 +1559,30 @@
                 </div>
             </div>
 
-            <!-- Summary Card -->
-            <div class="summary-card reveal" id="summary-card">
-                <div class="summary-card-title" data-content="summaryCardTitle"></div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelCurrent"></span>
-                    <span id="summary-current"></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelOriginalAge"></span>
-                    <span id="summary-orig-age"></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelAdjSav"></span>
-                    <span id="summary-adj-sav"></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelAdjAge"></span>
-                    <span id="summary-adj-age"></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelAdjPt"></span>
-                    <span id="summary-adj-pt"></span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-row-label" data-content="summaryLabelResult"></span>
-                    <span id="summary-result" class="summary-result-pct" aria-live="polite"></span>
+            <!-- Fine Print -->
+            <div class="fine-print-section">
+                <button class="fine-print-toggle" id="fine-print-toggle" type="button" aria-expanded="false" data-content="finePrintToggle"></button>
+                <div class="fine-print-body" id="fine-print-body">
+                    <div class="fine-print-row">
+                        <span data-content="finePrintProjected"></span>
+                        <span id="fp-projected"></span>
+                    </div>
+                    <div class="fine-print-row">
+                        <span data-content="finePrintTarget"></span>
+                        <span id="fp-target"></span>
+                    </div>
+                    <div class="fine-print-row">
+                        <span data-content="finePrintGapDef"></span>
+                        <span id="fp-gap"></span>
+                    </div>
+                    <div class="fine-print-row">
+                        <span data-content="finePrintReturnLabel"></span>
+                        <span data-content="finePrintReturnValue"></span>
+                    </div>
+                    <div class="fine-print-row">
+                        <span data-content="finePrintMethodLabel"></span>
+                        <span data-content="finePrintMethodValue"></span>
+                    </div>
                 </div>
             </div>
 
