@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Readiness | Marcus Cole</title>
+    <meta name="description" content="Find out where you stand for retirement in under 2 minutes. Put in your numbers, get a real answer, and bring it to your call with Marcus.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -268,8 +269,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border: 1px solid var(--border);
             background: none;
             cursor: pointer;
@@ -922,6 +923,7 @@
         }
 
         .fine-print-toggle:hover { color: var(--text); }
+        .fine-print-toggle:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
         .fine-print-toggle::before {
             content: '▸';
@@ -1027,7 +1029,7 @@
             inset: 0;
             background: rgba(28, 25, 23, 0.5);
             z-index: 100;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
         }
 
@@ -1037,13 +1039,14 @@
 
         .send-form-card {
             background: var(--bg);
-            border-radius: 6px 6px 0 0;
+            border-radius: 6px;
             padding: var(--space-2xl) var(--space-lg) var(--space-lg);
             width: 100%;
-            max-width: 900px;
+            max-width: 520px;
             max-height: 90dvh;
             overflow-y: auto;
             animation: slideUp 300ms var(--ease-out);
+            margin: var(--space-lg);
         }
 
         @keyframes slideUp {
@@ -1182,6 +1185,7 @@
         }
 
         .edit-numbers:hover { color: var(--text); }
+        .edit-numbers:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
         /* Results screen — left-aligned, wider card layout */
         #screen-8 .explainer-title,
@@ -1849,7 +1853,7 @@
         sendFormNoteLabel: "Anything you want to make sure we cover on the call? <span style='color:var(--muted)'>(optional)</span>",
         sendFormCancel: "Cancel",
         sendFormSubmit: "Send to Marcus",
-        sendSuccessText: "Done. I\u2019ll have your numbers before the call.",
+        sendSuccessText: "Your email app should have a draft ready. Hit send and I\u2019ll have your numbers before the call.",
 
         // Screen 8: Results - Footer
         ctaBody: "This is a starting answer, not a final one. The real planning happens when we sit down, and it goes a lot faster now that you already know where you stand.",
@@ -1898,9 +1902,30 @@
             monthly: null
         };
 
+        // ── Restore saved session ──
+        let resumeScreen = null;
+        try {
+            const saved = JSON.parse(sessionStorage.getItem('marcus_quiz_state'));
+            if (saved && saved.state && saved.screen) {
+                Object.assign(state, saved.state);
+                resumeScreen = saved.screen;
+            }
+        } catch (e) {}
+
         // ── Helpers ──
         const $ = id => document.getElementById(id);
         const screens = document.querySelectorAll('.screen');
+
+        // ── Session persistence ──
+        const STORAGE_KEY = 'marcus_quiz_state';
+        function saveSession(screen) {
+            try {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ state, screen }));
+            } catch (e) { /* quota or private mode — silently skip */ }
+        }
+        function clearSession() {
+            try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        }
 
         // Progress bar: screens 1-6 map to 0%-100%
         const progressSteps = { 1: 16, 2: 33, 3: 50, 4: 66, 5: 83, 6: 100 };
@@ -1919,6 +1944,9 @@
             const bar = $('progress-bar');
             bar.style.width = pct + '%';
             bar.setAttribute('aria-valuenow', pct);
+
+            // Save progress (skip loading/results screens)
+            if (n >= 1 && n <= 6) saveSession(n);
 
             // Auto-focus the first interactive element so Enter works immediately
             // Skip results screen (screen 8) — it has staggered reveals
@@ -2149,6 +2177,7 @@
             // Summary card
             updateSummary();
 
+            clearSession(); // results computed — no need to restore mid-flow
             goTo(8);
 
             // Staggered reveal sequence
@@ -2180,6 +2209,10 @@
             $('vault-fill').setAttribute('height', '0');
             $('vault-surface').setAttribute('cy', '268');
             $('vault-pct').textContent = '0%';
+
+            // Update dynamic aria-label
+            const vaultSvg = $('vault-fill').closest('svg');
+            if (vaultSvg) vaultSvg.setAttribute('aria-label', 'Vault showing ' + pct + '% funded');
 
             setTimeout(() => {
                 animateVault(targetY, fillH, 1400);
@@ -2317,7 +2350,7 @@
 
         // ── Actions ──
         // ── Edit Numbers (back to screen 4) ──
-        $('edit-numbers').addEventListener('click', () => goTo(4));
+        $('edit-numbers').addEventListener('click', () => goTo(2));
 
         $('action-save').addEventListener('click', () => window.print());
 
@@ -2388,6 +2421,28 @@
                 $('send-form').reset();
             }, 3000);
         });
+
+        // ── Resume saved session ──
+        if (resumeScreen) {
+            // Populate inputs from saved state
+            if (state.mood) {
+                const card = document.querySelector(`[data-mood="${state.mood}"]`);
+                if (card) card.setAttribute('aria-checked', 'true');
+            }
+            if (state.age) $('input-age').value = state.age;
+            if (state.retireAge) $('input-retire-age').value = state.retireAge;
+            if (state.income) $('input-income').value = state.income.toLocaleString('en-US');
+            if (state.savings) $('input-savings').value = state.savings.toLocaleString('en-US');
+            if (state.monthly != null) $('input-monthly').value = state.monthly.toLocaleString('en-US');
+
+            // Enable next buttons for populated screens
+            if (state.age && state.retireAge) $('age-next').disabled = false;
+            if (state.income) $('income-next').disabled = false;
+            if (state.savings) $('savings-next').disabled = false;
+            if (state.monthly != null) $('monthly-next').disabled = false;
+
+            goTo(resumeScreen);
+        }
     });
     </script>
 </body>
