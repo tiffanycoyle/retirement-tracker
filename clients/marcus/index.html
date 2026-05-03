@@ -672,21 +672,14 @@
             height: 200px;
         }
 
-        .ring-wrap svg {
-            transform: rotate(-90deg);
+        .vessel-bg {
+            fill: var(--surface);
+            stroke: var(--border);
+            stroke-width: 2;
         }
 
-        .ring-bg {
-            fill: none;
-            stroke: var(--surface);
-            stroke-width: 10;
-        }
-
-        .ring-fill {
-            fill: none;
-            stroke-width: 10;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1.4s var(--ease-out-expo), stroke 600ms var(--ease-out) 0.8s;
+        #vessel-fill {
+            transition: none;
         }
 
         .ring-center {
@@ -1496,9 +1489,16 @@
                 <div class="ring-section">
                     <div class="ring-wrap">
                         <svg viewBox="0 0 180 180" width="100%" height="100%">
-                            <circle class="ring-bg" cx="90" cy="90" r="75"></circle>
-                            <circle class="ring-fill" id="ring-fill" cx="90" cy="90" r="75"
-                                stroke-dasharray="471.24" stroke-dashoffset="471.24"></circle>
+                            <defs>
+                                <clipPath id="vessel-clip"><circle cx="90" cy="90" r="74"/></clipPath>
+                                <linearGradient id="vessel-grad" x1="0" y1="1" x2="0" y2="0">
+                                    <stop offset="0%" stop-color="#92400E"/>
+                                    <stop offset="100%" stop-color="#D97706"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="vessel-bg" cx="90" cy="90" r="75"/>
+                            <rect id="vessel-fill" clip-path="url(#vessel-clip)"
+                                x="15" y="165" width="150" height="0" fill="url(#vessel-grad)"/>
                         </svg>
                         <div class="ring-center">
                             <div class="ring-pct" id="ring-pct">0%</div>
@@ -2093,7 +2093,8 @@
 
             // Reset for re-entry (if user edited numbers)
             document.querySelectorAll('#screen-8 .reveal').forEach(el => el.classList.remove('visible'));
-            $('ring-fill').style.strokeDashoffset = '471.24';
+            $('vessel-fill').setAttribute('y', '165');
+            $('vessel-fill').setAttribute('height', '0');
 
             // Populate math breakdown
             $('calc-income').textContent = fmtCurrency(state.income);
@@ -2142,27 +2143,34 @@
 
         function renderRing(pct) {
             const clamped = Math.min(pct, 100);
-            const circumference = 2 * Math.PI * 75; // 471.24
-            const offset = circumference * (1 - clamped / 100);
-            const ring = $('ring-fill');
-            const finalColor = pct >= 100 ? 'var(--low)' : pct >= 80 ? 'var(--medium)' : 'var(--critical)';
+            const maxH = 150; // circle spans y=15 to y=165
+            const fillH = maxH * (clamped / 100);
+            const targetY = 165 - fillH;
+            const fill = $('vessel-fill');
 
-            // Start with neutral amber, animate the arc
-            ring.style.stroke = 'var(--medium)';
+            fill.setAttribute('y', '165');
+            fill.setAttribute('height', '0');
             $('ring-pct').textContent = '0%';
             $('ring-pct').style.color = 'var(--text)';
 
             setTimeout(() => {
-                ring.style.strokeDashoffset = offset;
-                // Count up the percentage in sync with the ring
+                animateVessel(fill, targetY, fillH, 1400);
                 animateCounter($('ring-pct'), 0, pct, 1200);
             }, 100);
+        }
 
-            // Shift to final color after verdict is visible
-            setTimeout(() => {
-                ring.style.stroke = finalColor;
-                $('ring-pct').style.color = finalColor;
-            }, 900);
+        function animateVessel(el, targetY, targetH, duration) {
+            const startY = 165;
+            const start = performance.now();
+            function tick(now) {
+                const p = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+                const h = targetH * eased;
+                el.setAttribute('y', startY - h);
+                el.setAttribute('height', h);
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
         }
 
         function animateCounter(el, from, to, duration) {
