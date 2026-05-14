@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Proposal for Stephen Kalayjian | Twinning Pros & Coyle Co</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    *, *:before, *:after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
+    body { background: var(--background); color: var(--foreground); font-family: var(--font-text); line-height: 1.65; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Section system */
+    section { width: 100%; position: relative; overflow: hidden; }
+    section.ink { background: #0c0a08; color: #f7f3ed; }
+    section.cream { background: color-mix(in srgb, var(--brand-cream) 9%, white); }
+    section.gold-wash {
+      background: radial-gradient(700px 500px at 88% 8%, color-mix(in srgb, var(--brand-gold) 18%, transparent), transparent 60%),
+                  radial-gradient(600px 500px at 5% 90%, color-mix(in srgb, var(--brand-cream) 65%, transparent), transparent 60%),
+                  color-mix(in srgb, var(--brand-cream) 9%, white);
+    }
+
+    /* Grain texture on ink sections */
+    section.ink:after {
+      content: ""; position: absolute; inset: 0; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 256px 256px; pointer-events: none; z-index: 0;
+    }
+    section.ink > * { position: relative; z-index: 1; }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 60px; }
+    .container.narrow { max-width: 900px; }
+    .container.wide { max-width: 1200px; }
+
+    /* Typography */
+    .wm { font-family: var(--font-wordmark); font-weight: 100; letter-spacing: -0.01em; }
+    .wm .pros { font-family: var(--font-wordmark-italic); font-style: italic; font-weight: 400; }
+
+    .display { font-family: var(--font-wordmark); font-weight: 100; font-size: clamp(60px, 8vw, 108px); line-height: 0.95; letter-spacing: -0.035em; }
+    .display em { font-family: var(--font-wordmark-italic); font-style: italic; font-weight: 400; }
+    .h1 { font-family: var(--font-wordmark); font-weight: 300; font-size: 48px; line-height: 1.06; letter-spacing: -0.025em; }
+    .h2 { font-family: var(--font-wordmark); font-weight: 300; font-size: 36px; line-height: 1.1; letter-spacing: -0.015em; }
+    .h3 { font-family: var(--font-wordmark); font-weight: 400; font-size: 28px; line-height: 1.18; letter-spacing: -0.01em; }
+    .h4 { font-family: var(--font-text); font-weight: 600; font-size: 19px; line-height: 1.4; }
+
+    .body { font-size: 16px; line-height: 1.7; color: var(--muted-foreground); }
+    .body strong { color: var(--foreground); font-weight: 600; }
+    .body.lg { font-size: 18px; line-height: 1.65; }
+
+    section.ink .body { color: rgba(247, 243, 237, 0.6); }
+    section.ink .body strong { color: #f7f3ed; }
+    section.ink .h1, section.ink .h2, section.ink .h3, section.ink .h4 { color: #f7f3ed; }
+
+    .lead { font-size: 20px; line-height: 1.6; color: var(--muted-foreground); max-width: 58ch; }
+    section.ink .lead { color: rgba(247, 243, 237, 0.6); }
+
+    .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted-foreground); }
+    section.ink .eyebrow { color: rgba(247, 243, 237, 0.45); }
+    .dot { display: inline-block; width: 7px; height: 7px; background: var(--brand-gold); border-radius: 50%; margin: 0 12px 2px 0; vertical-align: middle; }
+    .gold { color: var(--brand-gold); }
+    .mono { font-family: var(--font-mono); }
+
+    .stat { font-family: var(--font-wordmark); font-weight: 100; font-size: 72px; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .stat.xl { font-size: 120px; }
+    .stat-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 12px; }
+
+    /* Cover hero */
+    .hero { min-height: 100vh; display: flex; align-items: flex-end; position: relative; }
+    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+    .hero-bg:after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(12,10,8,0.1) 0%, rgba(12,10,8,0.2) 30%, rgba(12,10,8,0.6) 60%, rgba(12,10,8,0.92) 82%, rgba(12,10,8,0.98) 100%); }
+    .hero-content { position: relative; z-index: 1; padding: 0 60px 88px; max-width: 1080px; width: 100%; margin: 0 auto; }
+    .hero .wm-top { position: absolute; top: 44px; left: 60px; z-index: 2; color: #f7f3ed; font-size: 26px; }
+    .hero .date-top { position: absolute; top: 50px; right: 60px; z-index: 2; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,243,237,0.45); }
+
+    /* Press strip */
+    .press-strip { display: flex; align-items: center; justify-content: center; gap: 40px; padding: 32px 60px; background: #0c0a08; border-top: 1px solid rgba(247,243,237,0.08); }
+    .press-strip .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(247,243,237,0.3); }
+    .press-logo { font-family: var(--font-wordmark); font-weight: 500; font-size: 18px; color: rgba(247,243,237,0.5); letter-spacing: -0.01em; }
+    .press-sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(203,167,101,0.4); }
+
+    /* Layout */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .team-photo { width: 100%; height: 480px; object-fit: cover; border-radius: 16px; }
+
+    /* Finding blocks (Audit) */
+    .finding-block { display: grid; grid-template-columns: 72px 1fr; gap: 24px; padding: 36px 0; border-top: 1px solid rgba(247,243,237,0.1); align-items: start; }
+    .finding-block:last-child { border-bottom: 1px solid rgba(247,243,237,0.1); }
+    .finding-num { font-family: var(--font-wordmark); font-weight: 100; font-size: 56px; line-height: 0.9; color: var(--brand-gold); letter-spacing: -0.02em; }
+    .finding-block .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brand-gold); padding: 5px 14px; border: 1px solid rgba(203,167,101,0.3); border-radius: 100px; margin-bottom: 12px; }
+
+    /* Matrix (Exec Summary & Appendix) */
+    .trace-matrix { display: grid; grid-template-columns: 0.7fr 1fr 1.3fr; gap: 1px; background: rgba(247,243,237,0.1); border-radius: 8px; overflow: hidden; }
+    .trace-matrix .cell { padding: 18px 22px; background: #0c0a08; }
+    .trace-matrix .cell.header { background: rgba(247,243,237,0.04); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,243,237,0.4); padding: 12px 22px; }
+    .trace-matrix .cell p { font-size: 14px; color: rgba(247,243,237,0.55); line-height: 1.5; }
+    .trace-matrix .cell p strong { color: #f7f3ed; font-weight: 600; }
+
+    section.cream .trace-matrix { background: var(--border); }
+    section.cream .trace-matrix .cell { background: white; }
+    section.cream .trace-matrix .cell.header { background: color-mix(in srgb, var(--brand-gold) 8%, white); color: var(--muted-foreground); }
+    section.cream .trace-matrix .cell p { color: var(--muted-foreground); }
+    section.cream .trace-matrix .cell p strong { color: var(--foreground); }
+
+    /* Marquee strip */
+    .marquee { overflow: hidden; white-space: nowrap; padding: 20px 0; background: var(--brand-gold); }
+    .marquee-inner { display: inline-block; animation: marquee 18s linear infinite; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #0c0a08; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .marquee-sep { display: inline-block; width: 5px; height: 5px; background: #0c0a08; border-radius: 50%; vertical-align: middle; margin: 0 28px; opacity: 0.4; }
+
+    /* Scope cards */
+    .scope-card { padding: 44px; background: white; border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; gap: 16px; border-top: 3px solid var(--brand-gold); }
+    .scope-card .price { font-family: var(--font-wordmark); font-weight: 100; font-size: 48px; letter-spacing: -0.025em; color: var(--brand-gold); margin-top: auto; padding-top: 20px; }
+    .addons-list { list-style: none; padding: 0; }
+    .addons-list li { font-size: 14px; color: rgba(247,243,237,0.5); padding: 8px 0 8px 18px; position: relative; border-bottom: 1px solid rgba(247,243,237,0.05); }
+    .addons-list li:before { content: "\2014"; position: absolute; left: 0; font-family: var(--font-mono); font-size: 11px; color: rgba(247,243,237,0.4); }
+
+    /* Timeline gates */
+    .timeline-wrap { position: relative; padding-left: 80px; }
+    .timeline-wrap:before { content: ""; position: absolute; left: 54px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--brand-gold), color-mix(in srgb, var(--brand-gold) 20%, transparent)); }
+    .timeline-gate { position: relative; padding: 28px 0; border-bottom: 1px solid var(--border); }
+    .timeline-gate:first-child { padding-top: 0; }
+    .timeline-gate:last-child { border-bottom: none; }
+    .gate-label { position: absolute; left: -80px; top: 28px; font-family: var(--font-wordmark); font-weight: 100; font-size: 40px; line-height: 1; color: var(--brand-gold); width: 44px; text-align: right; }
+    .timeline-gate:first-child .gate-label { top: 0; }
+    .gate-dot { position: absolute; left: -30px; top: 36px; width: 10px; height: 10px; background: var(--brand-gold); border-radius: 50%; border: 3px solid color-mix(in srgb, var(--brand-cream) 9%, white); }
+    .timeline-gate:first-child .gate-dot { top: 8px; }
+
+    /* Testimonial */
+    .testimonial-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 520px; }
+    .testimonial-image { background-size: cover; background-position: center top; }
+    .testimonial-content { display: flex; flex-direction: column; justify-content: center; padding: 48px; background: #0c0a08; color: #f7f3ed; position: relative; }
+    .testimonial-quote { font-family: var(--font-wordmark); font-weight: 300; font-style: italic; font-size: 26px; line-height: 1.25; letter-spacing: -0.01em; color: #f7f3ed; }
+    .quote-mark { font-family: var(--font-wordmark); font-weight: 100; font-size: 120px; line-height: 0.5; color: var(--brand-gold); opacity: 0.25; position: absolute; top: 36px; left: 40px; }
+
+    /* Case study results */
+    .result-badge { display: inline-flex; align-items: baseline; gap: 10px; padding: 12px 20px; background: color-mix(in srgb, var(--brand-gold) 10%, transparent); border-radius: 10px; }
+    .result-badge .num { font-family: var(--font-wordmark); font-weight: 100; font-size: 32px; letter-spacing: -0.02em; }
+    .result-badge .label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); }
+
+    /* Investment section */
+    .anchor-stat { font-family: var(--font-wordmark); font-weight: 100; font-size: 128px; line-height: 0.9; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+    .price-row { display: grid; grid-template-columns: 1fr auto; gap: 32px; padding: 28px 0; border-bottom: 1px solid rgba(247,243,237,0.1); align-items: center; }
+    .price-row:first-child { border-top: 2px solid rgba(247,243,237,0.18); }
+    .price-amount { font-family: var(--font-wordmark); font-weight: 100; font-size: 44px; letter-spacing: -0.02em; color: var(--brand-gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .total-bar { display: flex; justify-content: space-between; align-items: end; padding: 32px 0 0; border-top: 4px solid var(--brand-gold); margin-top: 20px; }
+    .total-price { font-family: var(--font-wordmark); font-weight: 100; font-size: 96px; line-height: 1; letter-spacing: -0.035em; color: var(--brand-gold); font-variant-numeric: tabular-nums; }
+    .market-row { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px dotted rgba(247,243,237,0.1); font-size: 14px; }
+
+    /* CTA / Cards */
+    .cta-card { padding: 36px 40px; background: rgba(247,243,237,0.05); border-radius: 16px; border: 1px solid rgba(247,243,237,0.08); }
+    .cta-card.primary { background: rgba(247,243,237,0.1); border-color: var(--brand-gold); }
+    .cta-num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; color: var(--brand-gold); margin-bottom: 12px; }
+    section.cream .cta-card { background: white; border: 1px solid var(--border); }
+    section.cream .cta-card.primary { border-color: var(--brand-gold); }
+
+    .dark-card { padding: 36px 40px; background: var(--foreground); color: var(--background); border-radius: 16px; }
+    .dark-card p { color: color-mix(in srgb, var(--background) 80%, transparent); }
+    .dark-card strong { color: var(--background); }
+
+    .gold-rule { width: 56px; height: 2px; background: var(--brand-gold); }
+
+    /* Expandable scope details */
+    .scope-detail { border-bottom: 1px solid rgba(247,243,237,0.1); }
+    .scope-detail summary { cursor: pointer; list-style: none; }
+    .scope-detail summary::-webkit-details-marker { display: none; }
+    .scope-detail summary::marker { display: none; content: ""; }
+    .scope-detail summary .price-amount { position: relative; padding-right: 28px; }
+    .scope-detail summary .price-amount::after {
+      content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      font-family: var(--font-mono); font-size: 16px; font-weight: 400; color: rgba(247,243,237,0.35);
+      transition: transform 0.3s ease;
+    }
+    .scope-detail[open] summary .price-amount::after { content: "\2212"; }
+    .scope-detail-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      padding: 0 0 28px; margin-top: -8px;
+    }
+
+    /* Chat bubbles */
+    .chat-wrap { position: relative; max-width: 820px; margin: 0 auto; min-height: 320px; }
+    .chat-bubble { border-radius: 20px; padding: 40px 44px; }
+    .chat-bubble.dark { background: #0c0a08; color: #f7f3ed; width: 52%; position: relative; z-index: 2; }
+    .chat-bubble.dark p { font-family: var(--font-wordmark); font-weight: 300; font-style: italic; font-size: 28px; line-height: 1.2; letter-spacing: -0.01em; color: #f7f3ed; }
+    .chat-bubble.light { background: white; border: 1px solid var(--border); width: 60%; margin-left: auto; margin-top: -48px; position: relative; z-index: 1; }
+    .chat-bubble.light:after { content: ""; position: absolute; bottom: -14px; right: 64px; width: 28px; height: 28px; background: white; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg); }
+    .chat-bubble.light p { font-family: var(--font-text); font-size: 18px; line-height: 1.6; color: var(--foreground); }
+
+    /* Cascading lines */
+    .cascade-line { font-family: var(--font-mono); font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.15em; text-align: center; padding: 20px 0; color: var(--foreground); }
+    .cascade-line:nth-child(2) { opacity: 0.8; }
+    .cascade-line:nth-child(3) { opacity: 0.55; }
+    .cascade-line:nth-child(4) { opacity: 0.35; }
+
+    footer { text-align: center; padding: 56px 60px 36px; background: #0c0a08; border-top: 1px solid rgba(247,243,237,0.06); }
+
+    /* Sidebar TOC */
+    .toc {
+      position: fixed; top: 50%; left: 36px; transform: translateY(-50%); z-index: 100;
+      display: flex; flex-direction: column; gap: 2px;
+      transition: opacity 0.3s ease;
+      opacity: 0; pointer-events: none;
+    }
+    .toc.visible { opacity: 1; pointer-events: auto; }
+    .toc a {
+      font-family: var(--font-text); font-weight: 400; font-size: 13px;
+      padding: 7px 14px; border-radius: 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+    }
+    .toc.toc-light a { color: rgba(0,0,0,0.4); }
+    .toc.toc-light a:hover { background: color-mix(in srgb, var(--brand-gold) 8%, white); color: rgba(0,0,0,0.8); text-decoration: none; }
+    .toc.toc-light a.active { background: color-mix(in srgb, var(--brand-gold) 12%, white); color: #0c0a08; font-weight: 500; }
+    .toc.toc-dark a { color: rgba(247,243,237,0.35); }
+    .toc.toc-dark a:hover { background: rgba(247,243,237,0.08); color: rgba(247,243,237,0.8); text-decoration: none; }
+    .toc.toc-dark a.active { background: rgba(247,243,237,0.1); color: #f7f3ed; font-weight: 500; }
+    @media (max-width: 1360px) { .toc { display: none; } }
+    @media print { .toc { display: none; } }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+
+    /* Stagger children */
+    .stagger > .reveal:nth-child(2) { transition-delay: 0.1s; }
+    .stagger > .reveal:nth-child(3) { transition-delay: 0.2s; }
+    .stagger > .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Accessibility */
+    :focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 3px; border-radius: 4px; }
+    .skip-link {
+      position: absolute; top: -100%; left: 50%; transform: translateX(-50%); z-index: 200;
+      padding: 8px 16px; background: var(--brand-gold); color: #0c0a08;
+      font-family: var(--font-text); font-size: 14px; font-weight: 600;
+      border-radius: 6px; text-decoration: none;
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* Selection */
+    ::selection { background: color-mix(in srgb, var(--brand-gold) 20%, transparent); }
+
+    /* No-JS fallback */
+    @media (scripting: none) {
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* Light-theme accordion (Why Us) */
+    .cs-detail { border-bottom: 1px solid var(--border); }
+    .cs-detail summary { cursor: pointer; list-style: none; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; }
+    .cs-detail summary::-webkit-details-marker { display: none; }
+    .cs-detail summary::marker { display: none; content: ""; }
+    .cs-detail summary .cs-title { font-family: var(--font-text); font-weight: 600; font-size: 15px; color: var(--foreground); }
+    .cs-detail summary::after {
+      content: "+"; font-family: var(--font-mono); font-size: 16px; color: var(--muted-foreground);
+      transition: transform 0.3s ease;
+    }
+    .cs-detail[open] summary::after { content: "\2212"; }
+    .cs-detail .cs-body { padding: 0 0 28px; }
+
+    /* Responsive: 960px */
+    @media (max-width: 960px) {
+      .container { padding: 0 40px; }
+      .two-col { grid-template-columns: 1fr; gap: 48px; }
+      .testimonial-section { grid-template-columns: 1fr; }
+      .testimonial-image { min-height: 360px; }
+      .testimonial-content { padding: 48px 40px; }
+      .anchor-stat { font-size: 80px; }
+      .total-price { font-size: 64px; }
+      .price-amount { font-size: 32px; }
+      .scope-card { padding: 32px; }
+      .hero-content { padding: 0 40px 64px; }
+      .hero .wm-top { left: 40px; }
+      .hero .date-top { right: 40px; }
+      .press-strip { padding: 24px 40px; gap: 24px; }
+      .exec-boxes { grid-template-columns: 1fr !important; }
+      .scope-card-grid { grid-template-columns: 1fr !important; }
+    }
+
+    /* Responsive: 768px */
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      .hero-content { padding: 0 24px 48px; }
+      .hero .wm-top { left: 24px; top: 28px; font-size: 22px; }
+      .hero .date-top { right: 24px; top: 32px; }
+      .display { font-size: clamp(36px, 7vw, 60px); }
+      .h1 { font-size: 36px; }
+      .stat.xl { font-size: 72px; }
+      .anchor-stat { font-size: 56px; }
+      .total-price { font-size: 48px; }
+      .price-amount { font-size: 28px; }
+      .chat-bubble.dark { width: 70%; }
+      .chat-bubble.light { width: 80%; margin-top: -32px; }
+      .chat-bubble { padding: 28px 32px; }
+      .chat-bubble.dark p { font-size: 22px; }
+      .press-strip { flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .timeline-wrap { padding-left: 64px; }
+      .gate-label { left: -64px; font-size: 32px; width: 36px; }
+      .gate-dot { left: -20px; }
+      .testimonial-content { padding: 40px 24px; }
+      .quote-mark { top: 28px; left: 24px; font-size: 100px; }
+      .testimonial-quote { font-size: 28px; }
+      .scope-detail-body { grid-template-columns: 1fr; gap: 20px; }
+      footer { padding: 40px 24px 28px; }
+    }
+
+    /* Responsive: 480px */
+    @media (max-width: 480px) {
+      .hero-content { padding: 0 20px 36px; }
+      .container { padding: 0 20px; }
+      .h1 { font-size: 28px; }
+      .anchor-stat { font-size: 44px; }
+      .total-price { font-size: 36px; }
+      .price-row { grid-template-columns: 1fr; gap: 8px; }
+      .price-amount { text-align: left; }
+      .chat-bubble.dark { width: 85%; }
+      .chat-bubble.light { width: 90%; }
+    }
+
+    /* Print media */
+    @media print {
+      .hero { min-height: auto; height: 100vh; }
+      section.ink, .press-strip, footer, .testimonial-content { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .marquee { display: none; }
+      .page-break { break-before: page; }
+      .no-break { break-inside: avoid; }
+      @page { margin: 0; size: letter; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      section.ink:after { display: none; }
+      .scope-card-grid { grid-template-columns: 1fr !important; }
+      .scope-detail-body { display: grid !important; }
+      .scope-detail summary .price-amount::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#reframe" class="skip-link">Skip to content</a>
+
+  <!-- HERO COVER -->
+  <section class="hero">
+    <div class="hero-bg" style="background-image: url('twinningpros-sktrading-audit.jpg');"></div>
+    <div class="wm wm-top">twinning <span class="pros">pros</span></div>
+    <div class="date-top">May 2026</div>
+    <div class="hero-content">
+      <h1 class="display" style="color:#f7f3ed; margin-bottom:28px;">
+        Forty years in the market.<br> <em>One platform that finally says so.</em>
+      </h1>
+      <p class="eyebrow" style="color:var(--brand-gold); margin-bottom:20px;">Digital authority proposal</p>
+      <p style="font-size:17px; color:rgba(247,243,237,0.55); max-width:56ch;">
+        Prepared for Stephen Kalayjian &middot; SK Trading Live
+      </p>
+    </div>
+  </section>
+
+  <!-- THE REFRAME -->
+  <section id="reframe" class="ink" style="padding: 96px 0;">
+    <div class="container narrow">
+      <div class="reveal" style="text-align: center;">
+        <div class="gold-rule" style="width: 40px; margin: 0 auto 28px;"></div>
+        <h2 class="display" style="color: #f7f3ed; font-size: clamp(40px, 5vw, 64px); margin-bottom: 28px;">
+          This is not a<br>website quote.
+        </h2>
+        <p class="lead" style="margin:0 auto; text-align:center; max-width:54ch;">
+          Most trading media is noise optimized for attention. Your competitive advantage is signal optimized for accuracy. The brand you have today says <em>respected trader with a subscription product</em>. It should say <strong>the definitive authority voice for serious market operators</strong>. This proposal is the infrastructure that closes that gap.
+        </p>
+        <p style="font-family:var(--font-wordmark-italic); font-style:italic; font-weight:400; font-size:22px; color:var(--muted-foreground); margin-top:32px; text-align:center;">
+          Not a patch for where you have been. Infrastructure for where you are going.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONLY STEPHEN CAN SAY THIS -->
+  <section id="category" class="ink" style="padding:120px 0;">
+    <div class="container narrow">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom:24px;">Category of 1</p>
+        <h2 class="h1" style="color:#f7f3ed; margin-bottom:20px; font-size:48px; max-width:22ch;">
+          Only Stephen can say this.
+        </h2>
+        <p class="lead" style="margin-bottom:48px;">
+          Things that are true and inarguable for you specifically. No competitor in the retail trading education category can claim them without lying. This is the raw material the new platform is designed to surface.
+        </p>
+      </div>
+
+      <ul class="reveal" style="list-style:none; padding:0; margin:0; display:grid; gap:20px;">
+        <li style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px; font-size:16px; line-height:1.6; color:rgba(247,243,237,0.6);">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:6px;">01 &mdash; MARKET CYCLE SURVIVAL</span>
+          Forty-plus years of active market experience across crashes, bubbles, and structural regime changes that no sub-30 influencer has lived through.
+        </li>
+        <li style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px; font-size:16px; line-height:1.6; color:rgba(247,243,237,0.6);">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:6px;">02 &mdash; INSTITUTIONAL PEDIGREE</span>
+          A documented Interactive Brokers webinar partnership and TradeStation named representative status; institutional validation, not rented credibility.
+        </li>
+        <li style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px; font-size:16px; line-height:1.6; color:rgba(247,243,237,0.6);">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:6px;">03 &mdash; EARNED CERTAINTY, NOT PERFORMANCE THEATER</span>
+          The opposite of the fake-guru ecosystem: process over outcome, transparent calls with a logged history, accountability built into the format.
+        </li>
+      </ul>
+
+      <div class="reveal" style="margin-top:40px;">
+        <p class="body" style="font-size:13px; color:rgba(247,243,237,0.5);">
+          <strong style="color: var(--brand-gold);">Source alignment:</strong> These positioning pillars are derived directly from the SK Marketing Strategy developed by Twinning Pros (May 2026). Our role is to build the technical and visual infrastructure required to execute Twinning Pros' operational blueprint in full compliance with FTC and NFA Rule 2-29 standards.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WELCOME -->
+  <section class="cream" style="padding: 120px 0;">
+    <div class="container">
+      <div class="reveal" style="text-align: center; margin-bottom: 56px;">
+        <p class="eyebrow" style="margin-bottom: 20px;"><span class="dot"></span>Welcome, Stephen</p>
+        <h2 class="h1" style="font-size: 52px; max-width: 20ch; margin: 0 auto;">
+          Before we quote a price, we make sure to test everything.
+        </h2>
+      </div>
+
+      <div class="chat-wrap reveal reveal-delay-1">
+        <div class="chat-bubble dark">
+          <p>"Someone on my team said we could get a website for $5,000. Why would we spend more than that?"</p>
+        </div>
+        <div class="chat-bubble light" style="margin-top: -24px;">
+          <p>
+            We pulled your site apart before we responded. SEO posture, page architecture, compliance exposure, performance, security headers. The full diagnostic, completed before you spent a dollar. <strong>Three findings stood out.</strong> Each one carries real risk on its own. Together, they compound.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE AUDIT -->
+  <section id="audit" class="ink page-break" style="padding: 120px 0;">
+    <div class="container">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom: 24px;"><span class="dot"></span>The audit</p>
+        <h2 class="h1" style="color: #f7f3ed; margin-bottom: 20px; max-width: 18ch; font-size: 56px;">
+          Three findings. Each one is a risk on its own.
+        </h2>
+        <p class="lead" style="margin-bottom: 56px;">We tested sktrading.live against the same compliance, SEO, and performance benchmarks we apply to every client. Here is what came back.</p>
+      </div>
+
+      <div class="finding-block no-break reveal">
+        <div class="finding-num">01</div>
+        <div>
+          <span class="tag">Technical</span>
+          <h3 class="h3" style="color: #f7f3ed; margin-bottom: 12px;">The site is built on debt</h3>
+          <p class="body" style="font-size: 15px; max-width: 56ch;">
+            580 KB HTML payload on the homepage. Zero security headers. No structured data for search engines. Plugin bloat inflates every page load and exposes known vulnerabilities. A rebuild is cheaper than patching what exists.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding-block no-break reveal reveal-delay-1">
+        <div class="finding-num">02</div>
+        <div>
+          <span class="tag">Visibility</span>
+          <h3 class="h3" style="color: #f7f3ed; margin-bottom: 12px;">Search engines can't find you</h3>
+          <p class="body" style="font-size: 15px; max-width: 56ch;">
+            Zero organic search presence for category-relevant terms. No meta strategy, no internal linking, no sitemap optimization. The content exists but it is invisible. Every month without correction is a month competitors compound their lead.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding-block no-break reveal reveal-delay-2">
+        <div class="finding-num">03</div>
+        <div>
+          <span class="tag">Compliance</span>
+          <h3 class="h3" style="color: #f7f3ed; margin-bottom: 12px;">You're carrying regulatory exposure</h3>
+          <p class="body" style="font-size: 15px; max-width: 56ch;">
+            FTC testimonial violations matching the pattern that cost Warrior Trading $2.9M in redress payments. Income claims without required disclaimers. The European Accessibility Act adds accumulating fines for non-compliant sites serving EU visitors.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXECUTIVE SUMMARY MATRIX -->
+  <section class="ink" style="padding: 0 0 120px 0;">
+    <div class="container">
+      <div class="exec-boxes reveal" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px;">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:10px;">COMPLIANCE REMEDIATION</span>
+          <p style="font-size:14px; line-height:1.6; color:rgba(247,243,237,0.6); margin-bottom:14px;">FTC testimonial exposure, EAA accessibility risk, missing privacy docs, NFA Rule 2-29 gaps.</p>
+          <p style="font-size:12px; line-height:1.5; color:rgba(247,243,237,0.4);"><strong style="color:rgba(247,243,237,0.55);">Accepted when:</strong> FTC/NFA disclosures placed. WCAG 2.1 AA verified. Consent architecture live. Discord audited.</p>
+        </div>
+        <div style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px;">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:10px;">BRAND DESIGN</span>
+          <p style="font-size:14px; line-height:1.6; color:rgba(247,243,237,0.6); margin-bottom:14px;">No identity system, inaccessible colors, positioning misaligned with authority peers.</p>
+          <p style="font-size:12px; line-height:1.5; color:rgba(247,243,237,0.4);"><strong style="color:rgba(247,243,237,0.55);">Accepted when:</strong> Identity system and page templates approved at G2. Responsive at 3 breakpoints. Guidelines delivered.</p>
+        </div>
+        <div style="background:rgba(247,243,237,0.04); border:1px solid rgba(247,243,237,0.08); border-radius:8px; padding:20px 24px;">
+          <span class="mono" style="color:var(--brand-gold); font-size:11px; letter-spacing:0.2em; display:block; margin-bottom:10px;">PLATFORM BUILD</span>
+          <p style="font-size:14px; line-height:1.6; color:rgba(247,243,237,0.6); margin-bottom:14px;">580 KB technical debt, zero SEO presence, no membership or payment infrastructure.</p>
+          <p style="font-size:12px; line-height:1.5; color:rgba(247,243,237,0.4);"><strong style="color:rgba(247,243,237,0.55);">Accepted when:</strong> Performance benchmarks met. Security hardened. Membership &amp; payments verified end-to-end. SEO live.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE RISK stats -->
+  <section id="risk" class="gold-wash page-break" style="padding: 140px 0;">
+    <div class="container">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom: 24px;"><span class="dot"></span>Why this matters</p>
+        <h2 class="h1" style="margin-bottom: 72px;">The cost of inaction is not zero. It is accumulating.</h2>
+      </div>
+
+      <div class="two-col" style="gap: 64px; margin-bottom: 56px;">
+        <div class="reveal" style="text-align: left;">
+          <p class="stat xl gold" style="margin-bottom: 14px;">$2.9M</p>
+          <p class="stat-label" style="color: var(--muted-foreground); margin-bottom: 20px;">FTC REDRESS PRECEDENT</p>
+          <div class="gold-rule" style="margin-bottom: 20px;"></div>
+          <p class="body lg">
+            Warrior Trading's 2021 settlement. Same pattern: trading educator, income claims, lifestyle imagery without disclaimers. <strong>Your site matches this pattern today.</strong>
+          </p>
+        </div>
+        <div class="reveal reveal-delay-1" style="text-align: left;">
+          <p class="stat xl gold" style="margin-bottom: 14px;">&euro;40K</p>
+          <p class="stat-label" style="color: var(--muted-foreground); margin-bottom: 20px;">EAA FINE FLOOR</p>
+          <div class="gold-rule" style="margin-bottom: 20px;"></div>
+          <p class="body lg">
+            The European Accessibility Act applies to any site serving EU visitors. Fines start at &euro;40,000 and accumulate by member state. <strong>Enforceable since June 2025.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="dark-card reveal">
+        <p style="font-size: 17px; line-height: 1.6;">
+          These are not hypothetical risks. The testimonial pattern is documented. The accessibility regulation is live. The technical debt is measurable. <strong>The diagnostic was completed at no charge. What follows is the fix.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-inner" style="animation-duration: 54s;">
+      SIGNAL OPTIMIZED FOR ACCURACY <span class="marquee-sep"></span> COMPLIANCE AS DIFFERENTIATION <span class="marquee-sep"></span> BLOOMBERG TERMINAL, NOT A SALES PAGE <span class="marquee-sep"></span> THE DEFINITIVE AUTHORITY VOICE <span class="marquee-sep"></span> INFRASTRUCTURE FOR WHERE YOU ARE GOING <span class="marquee-sep"></span> CATEGORY OF ONE <span class="marquee-sep"></span> SIGNAL OPTIMIZED FOR ACCURACY <span class="marquee-sep"></span> COMPLIANCE AS DIFFERENTIATION <span class="marquee-sep"></span> BLOOMBERG TERMINAL, NOT A SALES PAGE <span class="marquee-sep"></span> THE DEFINITIVE AUTHORITY VOICE <span class="marquee-sep"></span> INFRASTRUCTURE FOR WHERE YOU ARE GOING <span class="marquee-sep"></span> CATEGORY OF ONE <span class="marquee-sep"></span>
+    </div>
+  </div>
+
+  <!-- WHAT IF cascading lines -->
+  <section id="opportunity" class="cream" style="padding:120px 0;">
+    <div class="container narrow" style="text-align:center;">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom:24px;"><span class="dot"></span>The opportunity</p>
+        <h2 class="h1" style="font-size:clamp(36px,5vw,52px); margin-bottom:56px; max-width:24ch; margin-left:auto; margin-right:auto;">
+          What if the platform matched the person behind it?
+        </h2>
+      </div>
+
+      <div class="reveal reveal-delay-1" style="display:flex; flex-direction:column; gap:18px; max-width:62ch; margin:0 auto;">
+        <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--foreground); opacity:1;">A brand that says definitive authority, not another educator with a subscription.</p>
+        <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--foreground); opacity:0.85;">A premium membership tier that turns forty years of market experience into recurring revenue.</p>
+        <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--foreground); opacity:0.7;">A content engine that compounds your visibility between live sessions, not just during them.</p>
+        <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--foreground); opacity:0.6;">A media presence where your name outranks every Reddit thread and forum post written about you.</p>
+        <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--foreground); opacity:0.5;">A site that feels like a Bloomberg terminal, not a sales page.</p>
+      </div>
+
+      <p class="reveal reveal-delay-2" style="font-family:var(--font-wordmark-italic); font-style:italic; font-weight:400; font-size:22px; color:var(--muted-foreground); margin-top:48px;">
+        That is exactly what we are going to build for you.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOW WE WORK Timeline -->
+  <section id="timeline" class="cream" style="padding: 0 0 120px 0;">
+    <div class="container narrow">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom: 24px;"><span class="dot"></span>Timeline and process</p>
+        <h2 class="h1" style="margin-bottom: 20px; font-size: 52px;">Four phases. Nothing moves without your sign-off.</h2>
+        <p class="body lg" style="margin-bottom: 56px; max-width: 56ch;">Each phase has a clear deliverable. You review it, approve it, and we move to the next one. No surprises, no scope drift.</p>
+      </div>
+
+      <div class="timeline-wrap reveal">
+        <div class="timeline-gate">
+          <div class="gate-label">01</div>
+          <div class="gate-dot"></div>
+          <p class="h4" style="margin-bottom: 4px;">Kickoff and immediate compliance fixes</p>
+          <p class="body">Contract signed, access granted, project channel open. Before the new platform is built, we deploy priority compliance patches to the live WordPress site: FTC disclosures, testimonial rewrites, and accessibility-critical updates. This reduces your exposure from day one.</p>
+          <p style="font-family: var(--font-mono); font-size: 11px; margin-top: 10px; color: var(--muted-foreground);">DELIVERABLE: Signed contract, first invoice paid, WordPress compliance patches live.</p>
+        </div>
+        <div class="timeline-gate">
+          <div class="gate-label">02</div>
+          <div class="gate-dot"></div>
+          <p class="h4" style="margin-bottom: 4px;">Brand design approved</p>
+          <p class="body">Identity system, page templates, and prototype reviewed. Nothing gets built until you sign off on how it looks and feels.</p>
+          <p style="font-family: var(--font-mono); font-size: 11px; margin-top: 10px; color: var(--muted-foreground);">DELIVERABLE: Approved design system and page templates.</p>
+        </div>
+        <div class="timeline-gate">
+          <div class="gate-label">03</div>
+          <div class="gate-dot"></div>
+          <p class="h4" style="margin-bottom: 4px;">Compliance and platform verified</p>
+          <p class="body">Accessibility audit passed, security confirmed, membership and payment flows tested end-to-end. The platform works before it goes live.</p>
+          <p style="font-family: var(--font-mono); font-size: 11px; margin-top: 10px; color: var(--muted-foreground);">DELIVERABLE: Compliance and platform verification checklist accepted.</p>
+        </div>
+        <div class="timeline-gate">
+          <div class="gate-label">04</div>
+          <div class="gate-dot"></div>
+          <p class="h4" style="margin-bottom: 4px;">Go-live</p>
+          <p class="body">Cutover executed, old site preserved for 72 hours, redirects active, and a 30-day warranty begins. You own everything.</p>
+          <p style="font-family: var(--font-mono); font-size: 11px; margin-top: 10px; color: var(--muted-foreground);">DELIVERABLE: Go-live authorization and final invoice paid.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET THE TEAM -->
+  <section class="gold-wash" style="padding: 120px 0;">
+    <div class="container">
+      <div class="two-col" style="align-items: center; gap: 56px;">
+        <div class="reveal">
+          <p class="eyebrow" style="margin-bottom: 16px;"><span class="dot"></span>Hello there</p>
+          <h2 class="h1" style="margin-bottom: 20px; font-size: 56px;">
+            We're Tiffany<br>&amp; Tabatha
+          </h2>
+          <p class="h3" style="font-family: var(--font-wordmark-italic); font-style: italic; font-weight: 400; color: var(--muted-foreground); margin-bottom: 24px;">
+            The growth strategy team you didn't know you needed, but can't live without.
+          </p>
+          <p class="body lg">
+            Since 2017, we have helped over 100 businesses across healthcare, financial services, real estate, SaaS, wellness, and food and beverage build brands that actually convert. Not prettier websites. Stronger market positions.
+          </p>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <img src="marketing_strategy_with_the_marketing_twins.jpg" alt="Tiffany and Tabatha, founders of Twinning Pros" class="team-photo" style="object-position: center top;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESS STRIP -->
+  <div class="press-strip">
+    <span class="label">Featured in</span>
+    <span class="press-sep"></span>
+    <span class="press-logo" style="font-family: Georgia, serif; font-weight: 700;">Forbes</span>
+    <span class="press-sep"></span>
+    <span class="press-logo">Nasdaq</span>
+    <span class="press-sep"></span>
+    <span class="press-logo" style="font-style: italic;">Inc.</span>
+    <span class="press-sep"></span>
+    <span class="press-logo">Motherly</span>
+  </div>
+
+  <!-- WHY US -->
+  <section id="case-study" class="gold-wash page-break" style="padding: 140px 0;">
+    <div class="container">
+      <div class="reveal" style="text-align: center; margin-bottom: 72px;">
+        <p class="eyebrow" style="margin-bottom: 20px;"><span class="dot"></span>Why us</p>
+        <h2 class="h1" style="font-size: 52px; max-width: 22ch; margin: 0 auto;">
+          Two people. One standard: regulated industries, done right.
+        </h2>
+      </div>
+
+      <div class="two-col reveal" style="gap: 64px; align-items: start;">
+        <!-- Tabatha -->
+        <div>
+          <p class="eyebrow gold" style="font-size: 11px; margin-bottom: 16px;">Why Tabatha</p>
+          <p class="body" style="margin-bottom: 12px;">
+            Tabatha Rowbatham doesn't just understand SEO. She understands what it takes to rank in industries where getting it wrong costs more than traffic.
+          </p>
+          <p class="body" style="margin-bottom: 12px;">
+            Her track record is built inside healthcare, one of the most scrutinized, compliance-sensitive verticals in search. She ranked a brand-new domain #1 for "psychiatrist in New York City," a search term that routinely runs $500 to $1,000 per click for practices paying to compete. She didn't buy her way there. She built authority through content precision, technical structure, and a clear understanding of how Google evaluates trust when the category carries real stakes.
+          </p>
+          <p class="body" style="margin-bottom: 12px;">
+            She did it again in Newport Beach. Another new domain, another saturated medical market, same outcome.
+          </p>
+          <details class="cs-detail" style="border-bottom: none; border-top: 1px solid var(--border); margin-top: 16px;">
+            <summary><span class="cs-title">The numbers behind five years with Jeff Ditzell Psychiatry</span></summary>
+            <div class="cs-body">
+              <p class="body" style="margin-bottom: 12px;">Over five years, that foundation produced a 162% increase in web users, a 172% increase in sessions, and 12,658 new email subscribers, while the practice raised rates 2.5x and kept a full patient load.</p>
+              <p class="body">Those aren't the results of shortcuts. They're the results of someone who knows how to build visibility that regulators, algorithms, and the people you're trying to reach all trust at the same time. That's the standard regulated industries require. It's the standard she brings.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Tiffany -->
+        <div>
+          <p class="eyebrow gold" style="font-size: 11px; margin-bottom: 16px;">Why Tiffany</p>
+          <p class="body" style="margin-bottom: 12px;">
+            Tiffany Coyle's work tends to start with a marketing brief and end somewhere more interesting.
+          </p>
+          <p class="body" style="margin-bottom: 12px;">
+            After five years working inside a psychiatric practice through a full relocation, a complete digital rebuild, two major system migrations, and a staff expansion, she has a specific skill that most strategists don't: she can tell the difference between a business that has a marketing problem and a business that has an operations problem wearing a marketing costume.
+          </p>
+          <p class="body" style="margin-bottom: 12px;">
+            In a regulated industry, that distinction matters more than most people want to admit.
+          </p>
+          <details class="cs-detail" style="border-bottom: none; border-top: 1px solid var(--border); margin-top: 16px;">
+            <summary><span class="cs-title">What five years inside a regulated practice looks like</span></summary>
+            <div class="cs-body">
+              <p class="body" style="margin-bottom: 12px;">She has navigated EMR transitions where patient data handling wasn't optional and payroll switches where timing mistakes had real consequences for clinical staff. She has built intake processes in a HIPAA context, where a funnel isn't just a conversion tool, it's a liability question. She has helped practices scale without losing the infrastructure that makes scaling safe.</p>
+              <p class="body" style="margin-bottom: 12px;">The result is a strategic partner who can sit inside the complexity of a regulated business and help it grow without creating new risk in the process.</p>
+              <p class="body"><strong>If your industry has rules, she's already worked somewhere that had harder ones.</strong></p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE ANCHOR / INVESTMENT -->
+  <section id="investment" class="ink page-break" style="padding: 140px 0 120px;">
+    <div class="container">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom: 24px;"><span class="dot"></span>The investment</p>
+      </div>
+
+      <div class="reveal" style="margin-bottom: 48px;">
+        <p class="body lg" style="max-width: 64ch;">
+          Three categories. Every dollar connected to a finding. Compliance drives the brand requirements. The brand system feeds into every platform template. The platform enforces the compliance rules at the code level. In a category where competitors have paid millions in FTC redress, compliance done correctly is not a constraint. It is differentiation.
+        </p>
+      </div>
+
+      <div class="gold-rule reveal" style="width: 100%; margin-bottom: 0;"></div>
+
+      <details class="scope-detail reveal">
+        <summary class="price-row">
+          <div>
+            <p class="h4" style="color: #f7f3ed;">Compliance Remediation</p>
+            <p class="body" style="font-size: 14px;">FTC, NFA Rule 2-29, accessibility, GDPR, legal docs, Discord audit</p>
+          </div>
+          <div class="price-amount">$20,000</div>
+        </summary>
+        <div class="scope-detail-body">
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Deliverables</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>FTC testimonial rewrite and disclosure placement</li>
+              <li>NFA Rule 2-29 promotional material alignment</li>
+              <li>Accessibility remediation requirements and EAA statement</li>
+              <li>GDPR consent architecture and privacy policy</li>
+              <li>Discord compliance audit with documented recommendations</li>
+            </ul>
+          </div>
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Exclusions</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>Formal legal opinion or securities counsel</li>
+              <li>Regulator-facing filings</li>
+              <li><strong>Note:</strong> If the Discord audit surfaces member-generated content requiring immediate crisis remediation, structural cleanup will be quoted separately.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="scope-detail reveal reveal-delay-1">
+        <summary class="price-row" style="border-top: none;">
+          <div>
+            <p class="h4" style="color: #f7f3ed;">Brand Design</p>
+            <p class="body" style="font-size: 14px;">Identity, design system, templates, brand guidelines</p>
+          </div>
+          <div class="price-amount">$25,000</div>
+        </summary>
+        <div class="scope-detail-body">
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Deliverables</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>Identity system and accessible color palette</li>
+              <li>Typography selection and type scale</li>
+              <li>Page templates at three breakpoints</li>
+              <li>Brand guidelines document</li>
+            </ul>
+          </div>
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Acceptance evidence</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>Templates approved at G2</li>
+              <li>Responsive checks passed at three breakpoints</li>
+              <li>Brand guidelines delivered</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="scope-detail reveal reveal-delay-2">
+        <summary class="price-row" style="border-top: none;">
+          <div>
+            <p class="h4" style="color: #f7f3ed;">Platform Build</p>
+            <p class="body" style="font-size: 14px;">Website, membership, payments, SEO, migration, warranty</p>
+          </div>
+          <div class="price-amount">$30,000</div>
+        </summary>
+        <div class="scope-detail-body">
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Deliverables</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>Website and membership platform built on a modern headless architecture <em>(Shortlist: Next.js 15 + Payload CMS 3 on GCP)</em></li>
+              <li>Integrated payments (Stripe) and content gating by tier</li>
+              <li>SEO foundation and security hardening</li>
+              <li>Content migration from WordPress with redirects</li>
+              <li>Cutover with 30-day warranty</li>
+            </ul>
+          </div>
+          <div>
+            <p class="eyebrow" style="font-size: 11px; margin-bottom: 8px;">Exclusions</p>
+            <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+              <li>Custom trading indicator development</li>
+              <li>Broker integration engineering</li>
+              <li>Ongoing content production</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <div class="total-bar reveal">
+        <div>
+          <p class="eyebrow" style="font-size: 11px;">Total investment</p>
+          <p style="font-size: 13px; color: rgba(247,243,237,0.35); margin-top: 6px;">Fixed price. Locked at signature.</p>
+        </div>
+        <div style="text-align: right;">
+          <div style="display: flex; align-items: baseline; gap: 24px;">
+            <div>
+              <p class="anchor-stat" style="font-size: 48px; color: rgba(247,243,237,0.3);">$2.9M</p>
+              <p class="stat-label" style="color: rgba(247,243,237,0.4); font-size: 9px;">Exposure on the table</p>
+            </div>
+            <div class="total-price">$75,000</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="body reveal" style="font-size: 14px; margin-top: 16px;">
+        <strong>Hosting:</strong> $3,600/yr billed direct to you. No markup. <em>(Includes managed GCP infrastructure, CDN, WAF, SSL, and 99.9% uptime SLA).</em>
+      </p>
+
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="ink" style="padding: 0 0 72px;">
+    <div class="container">
+      <div class="two-col reveal" style="gap: 48px; align-items: center;">
+        <div>
+          <img src="twinning-pros-jd-psychiatry.jpg" alt="Tiffany with Dr. Jeff Ditzell" style="width: 100%; height: 380px; object-fit: cover; object-position: center top; border-radius: 16px;">
+        </div>
+        <div>
+          <p style="font-family: var(--font-wordmark); font-weight: 300; font-style: italic; font-size: 26px; line-height: 1.3; letter-spacing: -0.01em; color: #f7f3ed; margin-bottom: 20px;">
+            Their efforts directly translate into tremendous results.
+          </p>
+          <p class="body" style="font-size: 15px; margin-bottom: 20px;">
+            From PR to all the nuances of marketing, to a beautiful and innovative website and SEO. Tiffany and Tabatha are results driven and give clear and concise analytics that demonstrate how their efforts directly translate into tremendous results. Top notch team, and very easy to work with.
+          </p>
+          <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,243,237,0.4);">
+            Dr. Jeff Ditzell &middot; Jeff Ditzell Psychiatry
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE SEE / AFTER LAUNCH -->
+  <section id="after-launch" class="gold-wash page-break" style="padding: 140px 0;">
+    <div class="container">
+      <div class="reveal" style="text-align: center; margin-bottom: 64px;">
+        <p class="eyebrow" style="margin-bottom: 20px;"><span class="dot"></span>What we see</p>
+        <h2 class="display" style="font-size: clamp(44px, 6vw, 72px); margin-bottom: 24px;">
+          We see the business<br><em>underneath the website.</em>
+        </h2>
+        <p class="body lg" style="max-width: 56ch; margin: 0 auto;">
+          Most agencies would quote you a site and move on. We looked at your membership funnel and saw a revenue structure the current platform cannot support. The build gives you the infrastructure. What comes next gives you the return.
+        </p>
+      </div>
+
+      <div class="reveal" style="text-align: center; margin-bottom: 48px;">
+        <p class="eyebrow gold" style="font-size: 11px; margin-bottom: 16px;">After launch</p>
+        <h3 class="h2" style="font-weight: 400; font-family: var(--font-wordmark-italic); font-style: italic;">Don't play games with your marketing strategy.</h3>
+      </div>
+
+      <div class="two-col reveal" style="gap: 48px; align-items: center;">
+        <div>
+          <img src="dont-play-games-with-your-marketing-strategy-twinning-pros.jpg" alt="Tiffany and Tabatha playing foosball" style="width: 100%; height: 480px; object-fit: cover; border-radius: 16px; object-position: center top;">
+          <p style="font-family: var(--font-wordmark-italic); font-style: italic; font-weight: 400; font-size: 19px; color: var(--muted-foreground); margin-top: 16px; text-align: center;">A premium tier that pays for the entire engagement.</p>
+        </div>
+        <div>
+          <p class="body lg" style="margin-bottom: 24px;">
+            Your current membership tiers leave the highest-value segment of your audience unserved. A top-tier offering at $499/month, capped at 200 seats to maintain exclusivity, changes the economics of the entire business.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div style="padding: 20px; background: white; border: 1px solid var(--border); border-radius: 10px;">
+              <p class="stat" style="font-size: 40px; margin-bottom: 4px;">13</p>
+              <p class="body" style="font-size: 12px;">members at $499/mo covers the full cost of this engagement within the first year</p>
+            </div>
+            <div style="padding: 20px; background: white; border: 1px solid var(--border); border-radius: 10px;">
+              <p class="stat" style="font-size: 40px; margin-bottom: 4px;">200</p>
+              <p class="body" style="font-size: 12px;">seat cap at $499/mo = $99,800/mo in potential recurring revenue from a single tier on a platform you own</p>
+            </div>
+          </div>
+          <p class="body" style="font-size: 15px; margin-bottom: 24px;">
+            The audience already exists. The demand already exists. What does not exist is the infrastructure to capture it. <strong>That is what this build creates.</strong>
+          </p>
+          <div style="padding-top: 16px; border-top: 1px solid var(--border);">
+            <p class="body" style="font-size: 13px;">
+              We have a complete growth strategy for what comes after launch: content ecosystem, community architecture, revenue expansion, and authority positioning at scale. <em>That engagement is separate and available once the foundation is live.</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO STRIP -->
+  <section class="ink" style="position: relative; overflow: hidden; height: 320px; padding: 0;">
+    <img src="examples-of-work.jpg" alt="Selection of Twinning Pros client work" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(12,10,8,0) 0%, rgba(12,10,8,0.7) 100%);"></div>
+    <p style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,243,237,0.45); z-index: 1;">100+ clients &middot; Since 2019</p>
+  </section>
+
+  <!-- PROPOSAL ACCEPTANCE -->
+  <section id="acceptance" class="cream page-break" style="padding: 120px 0;">
+    <div class="container">
+      <div class="reveal">
+        <p class="eyebrow" style="margin-bottom: 24px;"><span class="dot"></span>Before we start</p>
+        <h2 class="h1" style="margin-bottom: 20px; font-size: 44px;">A few things to align on so there are no surprises.</h2>
+      </div>
+
+      <div class="scope-card-grid reveal" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 56px;">
+        <div class="scope-card no-break">
+          <h3 class="h3" style="margin-bottom: 16px;">Assumptions</h3>
+          <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+            <li style="margin-bottom: 10px;">You provide required access (systems, documents, contacts) within 5 business days of signing.</li>
+            <li style="margin-bottom: 10px;">You designate one primary decision-maker for feedback and approvals.</li>
+            <li style="margin-bottom: 10px;">Any legal or securities-law review of marketing claims is handled by your own counsel.</li>
+          </ul>
+        </div>
+        <div class="scope-card no-break">
+          <h3 class="h3" style="margin-bottom: 16px;">Not included in this proposal</h3>
+          <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+            <li style="margin-bottom: 10px;">Legal advice or formal legal/securities opinions.</li>
+            <li style="margin-bottom: 10px;">FINRA/NFA/SEC registration analysis or regulatory filings.</li>
+            <li style="margin-bottom: 10px;">Paid advertising or media buying (placement, budgets, vendor management).</li>
+            <li>Custom trading indicator or algorithm development.</li>
+          </ul>
+        </div>
+        <div class="scope-card no-break">
+          <h3 class="h3" style="margin-bottom: 16px;">What we need from you</h3>
+          <ul class="body" style="font-size: 13px; padding-left: 16px; margin: 0;">
+            <li style="margin-bottom: 10px;">Timely, accurate information about your products, offers, and testimonials.</li>
+            <li style="margin-bottom: 10px;">Review and approve key deliverables at each phase so we stay on schedule.</li>
+            <li style="margin-bottom: 10px;">Coordinate any reviews with your legal/securities counsel and decide how to apply their advice.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Proposal notice -->
+      <div class="reveal" style="margin-bottom: 24px;">
+        <p class="body" style="font-size: 13px; color: var(--muted-foreground);">
+          This document is a proposal, not a contract. Final terms will live in a separate consulting agreement. No work begins until that agreement is signed by both parties.
+        </p>
+      </div>
+
+      <div class="two-col" style="gap: 32px; margin-bottom: 48px; align-items: stretch;">
+        <div class="cta-card primary reveal" style="display: flex; flex-direction: column;">
+          <p class="h4" style="margin-bottom: 8px; color: #0c0a08;">Proposal valid for 30 days</p>
+          <p class="body" style="font-size: 14px; color: #0c0a08;">
+            Pricing and scope are locked from the date of this document. Terms subject to revision after expiry.
+          </p>
+        </div>
+        <div class="cta-card reveal" style="display: flex; flex-direction: column;">
+          <p class="eyebrow" style="font-size: 11px; margin-bottom: 6px;">Note on timing</p>
+          <p class="body" style="font-size: 14px;">
+            The EAA has been enforceable since June 2025. Every month the current site stays live is a month of accumulated exposure. <strong>This is not a sales deadline; it reflects the enforcement calendar.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top: 56px; text-align: center; padding: 48px 40px; background: color-mix(in srgb, var(--brand-gold) 6%, white); border: 1px solid color-mix(in srgb, var(--brand-gold) 25%, white); border-radius: 16px;">
+        <p class="h3" style="margin-bottom: 12px;">Ready to move forward?</p>
+        <p class="body" style="font-size: 16px; margin-bottom: 28px; max-width: 48ch; margin-left: auto; margin-right: auto;">Reply to this email or reach out directly. We will walk through the findings together before anything is signed.</p>
+        <a href="mailto:tiffany@twinningpros.com" style="display: inline-block; padding: 16px 40px; background: var(--foreground); color: var(--background); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 8px; text-decoration: none;">Email Tiffany</a>
+        <p style="font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); margin-top: 16px;">
+          tiffany@twinningpros.com &middot; <a href="https://twinningpros.com" style="color: var(--muted-foreground); text-decoration: underline;">twinningpros.com</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="wm" style="font-size: 28px; color: #f7f3ed; margin-bottom: 12px;">twinning <span class="pros">pros</span></p>
+    <p style="font-family: var(--font-wordmark-italic); font-style: italic; font-size: 17px; color: rgba(247,243,237,0.5); margin-bottom: 16px;">We are looking forward to building this with you.</p>
+    <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,243,237,0.45);">
+      &copy; 2026 Twinning Pros. All rights reserved.
+    </p>
+  </footer>
+
+  <!-- Sidebar TOC -->
+  <nav class="toc" aria-label="Table of contents">
+    <a href="#reframe">The Reframe</a>
+    <a href="#category">Category of One</a>
+    <a href="#audit">The Audit</a>
+    <a href="#risk">Why This Matters</a>
+    <a href="#opportunity">The Opportunity</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#case-study">Why Us</a>
+    <a href="#investment">The Investment</a>
+    <a href="#after-launch">What We See</a>
+    <a href="#acceptance">Acceptance</a>
+  </nav>
+
+  <!-- Scroll reveal + TOC highlight -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+    document.querySelectorAll('.reveal').forEach((el) => {
+      observer.observe(el);
+    });
+
+    // TOC active state + theme
+    const toc = document.querySelector('.toc');
+    const tocLinks = document.querySelectorAll('.toc a');
+    const tocSections = Array.from(tocLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector('.toc a[href="#' + entry.target.id + '"]');
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0, rootMargin: "-40% 0px -55% 0px" });
+    tocSections.forEach(s => tocObserver.observe(s));
+
+    // Show TOC at start of reframe section
+    const reframeSection = document.querySelector('#reframe');
+    function updateTocVisibility() {
+      if (!reframeSection) return;
+      const top = reframeSection.getBoundingClientRect().top;
+      toc.classList.toggle('visible', top < window.innerHeight);
+    }
+    window.addEventListener('scroll', updateTocVisibility, { passive: true });
+    updateTocVisibility();
+
+    // Detect dark/light section at TOC midpoint
+    function updateTocTheme() {
+      const mid = window.innerHeight / 2;
+      const sections = document.querySelectorAll('section, .press-strip, .marquee, footer');
+      let onDark = false;
+      for (const s of sections) {
+        const r = s.getBoundingClientRect();
+        if (r.top <= mid && r.bottom >= mid) {
+          onDark = s.classList.contains('ink') || s.classList.contains('hero')
+            || s.tagName === 'FOOTER' || s.classList.contains('press-strip');
+          break;
+        }
+      }
+      toc.classList.toggle('toc-dark', onDark);
+      toc.classList.toggle('toc-light', !onDark);
+    }
+    window.addEventListener('scroll', updateTocTheme, { passive: true });
+    updateTocTheme();
+  </script>
+</body>
+</html>
